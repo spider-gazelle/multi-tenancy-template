@@ -1,8 +1,15 @@
 require "../spec_helper"
 
 describe App::Models::Organization do
-  it "should be able to create an organization" do
+  org = App::Models::Organization.new
+
+  Spec.around_each do |test|
     org = App::Models::Organization.new
+    test.run
+    org.destroy rescue nil
+  end
+
+  it "should be able to create an organization" do
     org.name = "Testing"
     org.save!
 
