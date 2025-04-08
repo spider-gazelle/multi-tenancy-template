@@ -13,13 +13,10 @@ function trap_ctrlc ()
 # when signal 2 (SIGINT) is received
 trap "trap_ctrlc" 2
 
-# remove database between runs
-rm -rf ./db/data
-mkdir ./db/data
-touch ./db/data/.keep
-
-# launch database
+# grab the latest version of the database
+# clean any existing data and launch it
 docker compose pull
+docker compose run --rm postgres sh -c "rm -rf /var/lib/postgresql/data/*"
 docker compose up -d postgres
 
 # run specs
@@ -31,4 +28,12 @@ docker compose run \
 
 # clean up environment
 docker compose down &> /dev/null
+
+if [ "$exit_code" -ne 0 ]; then
+    echo "Test failed. Database state is available in the container at /var/lib/postgresql/data for inspection."
+    echo "You can inspect with password: password"
+    echo "  * docker compose up -d postgres"
+    echo "  * docker exec -it postgres psql -U postgres -d development"
+fi
+
 exit ${exit_code}
