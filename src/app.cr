@@ -1,5 +1,7 @@
 require "option_parser"
 require "./constants"
+require "micrate"
+require "pg"
 
 module App
   # Server defaults
@@ -8,6 +10,8 @@ module App
   process_count = DEFAULT_PROCESS_COUNT
   docs = nil
   docs_file = nil
+
+  Micrate::DB.connection_url = PG_DATABASE_URL
 
   # Command line options
   OptionParser.parse(ARGV.dup) do |parser|
@@ -27,6 +31,19 @@ module App
 
     parser.on("-v", "--version", "Display the application version") do
       puts "#{NAME} v#{VERSION}"
+      exit 0
+    end
+
+    parser.on("--db", "Display the current database migration details") do
+      Micrate::Cli.run_status
+      exit 0
+    end
+
+    parser.on("--rollback", "Roll the database back one version") do
+      print "Performing database rollback... "
+      Micrate::Cli.run_down
+      puts "Done!\n"
+      Micrate::Cli.run_status
       exit 0
     end
 
@@ -70,6 +87,9 @@ module App
   puts "Launching #{NAME} v#{VERSION}"
 end
 
+# ensure the database is up to date
+Micrate::Cli.run_up
+
 # Requiring config here ensures that the option parser runs before
 # attempting to connect to databases etc.
 require "./config"
@@ -85,12 +105,6 @@ module App
     puts "\n > terminating gracefully"
     server.close
   end
-
-  {% unless flag?(:win32) %}
-    # Allow signals to change the log level at run-time
-    # Turn on DEBUG level logging `kill -s USR1 %PID`
-    register_severity_switch_signals
-  {% end %}
 
   # Start the server
   server.run do

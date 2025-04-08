@@ -5,7 +5,18 @@ dependencies:
   # The server framework
   action-controller:
     github: spider-gazelle/action-controller
-    version: ~> 7.0
+
+  # PG ORM
+  pg-orm:
+    github: spider-gazelle/pg-orm
+
+  # SQL Migrations
+  micrate:
+    github: amberframework/micrate
+
+  # SSO Authentication
+  multi_auth:
+    github: spider-gazelle/multi_auth
 
 development_dependencies:
   ameba:

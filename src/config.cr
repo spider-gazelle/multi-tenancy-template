@@ -3,6 +3,8 @@ require "action-controller"
 require "./constants"
 
 # Application code
+require "uuid"
+require "pg-orm"
 require "./controllers/application"
 require "./controllers/*"
 require "./models/*"

@@ -1,11 +1,32 @@
-version: '3'
 services:
-  # The Spider-Gazelle service
-  # run: `docker-compose build` to update the service
-  # run: `docker-compose up -d` to launch the service
-  sg:
-    build: .
-    ports:
-      - "3000:3000"
+  test:
+    image: 84codes/crystal:latest-alpine
+    volumes:
+      - ${PWD}/db:/app/db
+      - ${PWD}/src:/app/src
+      - ${PWD}/lib:/app/lib
+      - ${PWD}/spec:/app/spec
+      - ${PWD}/shard.override.yml:/app/shard.override.yml
+      - ${PWD}/shard.yml:/app/shard.yml
+      - ${PWD}/.ameba.yml:/app/.ameba.yml
+    depends_on:
+      - postgres
     environment:
-      SG_ENV: "production"
+      GITHUB_ACTION: ${GITHUB_ACTION:-}
+      PG_DATABASE_URL: ${PG_DATABASE_URL:-postgresql://postgres:password@postgres:5432/development}
+    working_dir: /app
+    entrypoint: ["crystal", "spec", "-v", "--error-trace"]
+
+  postgres:
+    image: postgres:17-alpine
+    volumes:
+      - ${PWD}/db/data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: development
