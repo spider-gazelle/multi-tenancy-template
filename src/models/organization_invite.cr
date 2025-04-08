@@ -15,8 +15,7 @@ class App::Models::OrganizationInvite < ::PgORM::Base
   attribute permission : App::Permissions, converter: App::PGEnumConverter(App::Permissions)
   attribute expires : Time?
 
-  attribute created_at : Time, mass_assignment: false
-  attribute updated_at : Time, mass_assignment: false
+  include PgORM::Timestamps
 
   # generate a secret for this invite
   before_create { self.secret = UUID.random.to_s }

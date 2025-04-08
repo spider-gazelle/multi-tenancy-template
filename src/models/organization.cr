@@ -5,8 +5,8 @@ class App::Models::Organization < ::PgORM::Base
   attribute name : String
   attribute description : String?
 
+  attribute owner_id : UUID?
   belongs_to :owner, class_name: User
 
-  attribute created_at : Time, mass_assignment: false
-  attribute updated_at : Time, mass_assignment: false
+  include PgORM::Timestamps
 end

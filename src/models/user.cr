@@ -5,8 +5,7 @@ class App::Models::User < ::PgORM::Base
   attribute name : String
   attribute email : String
 
-  attribute created_at : Time, mass_assignment: false
-  attribute updated_at : Time, mass_assignment: false
+  include PgORM::Timestamps
 
   before_save do
     self.email = email.strip.downcase

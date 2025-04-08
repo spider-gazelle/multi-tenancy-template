@@ -9,6 +9,5 @@ class App::Models::Auth < ::PgORM::Base
 
   belongs_to :user
 
-  attribute created_at : Time, mass_assignment: false
-  attribute updated_at : Time, mass_assignment: false
+  include PgORM::Timestamps
 end

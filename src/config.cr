@@ -28,6 +28,9 @@ module App
   filter_params = ["password", "bearer_token"]
   keeps_headers = ["X-Request-ID"]
 
+  # connect to the database
+  PgORM::Database.parse(PG_DATABASE_URL)
+
   # Add handlers that should run before your application
   ActionController::Server.before(
     ActionController::ErrorHandler.new(running_in_production?, keeps_headers),

@@ -10,6 +10,5 @@ class App::Models::OrganizationUser < ::PgORM::Base
 
   attribute permission : App::Permissions, converter: App::PGEnumConverter(App::Permissions)
 
-  attribute created_at : Time, mass_assignment: false
-  attribute updated_at : Time, mass_assignment: false
+  include PgORM::Timestamps
 end

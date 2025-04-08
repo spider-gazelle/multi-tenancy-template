@@ -32,7 +32,7 @@ CREATE INDEX idx_auth_user_id ON auth(user_id);
 -- Organizations Table
 CREATE TABLE organizations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    owner_id UUID NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+    owner_id UUID REFERENCES users(id) ON DELETE SET NULL,
     name TEXT NOT NULL,
     description TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -72,39 +72,6 @@ CREATE TABLE organization_invites (
 CREATE INDEX idx_org_invites_email ON organization_invites(email);
 CREATE INDEX idx_org_invites_organization_id ON organization_invites(organization_id);
 CREATE INDEX idx_org_invites_expires ON organization_invites(expires);
-
--- Trigger function to automatically update 'updated_at' timestamp
--- +micrate StatementBegin
-CREATE OR REPLACE FUNCTION update_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
--- +micrate StatementEnd
-
--- Add triggers to automatically update 'updated_at' on modification
-CREATE TRIGGER update_users_timestamp
-BEFORE UPDATE ON users
-FOR EACH ROW EXECUTE FUNCTION update_timestamp();
-
-CREATE TRIGGER update_auth_timestamp
-BEFORE UPDATE ON auth
-FOR EACH ROW EXECUTE FUNCTION update_timestamp();
-
-CREATE TRIGGER update_organizations_timestamp
-BEFORE UPDATE ON organizations
-FOR EACH ROW EXECUTE FUNCTION update_timestamp();
-
-CREATE TRIGGER update_organization_users_timestamp
-BEFORE UPDATE ON organization_users
-FOR EACH ROW EXECUTE FUNCTION update_timestamp();
-
-CREATE TRIGGER update_organization_invites_timestamp
-BEFORE UPDATE ON organization_invites
-FOR EACH ROW EXECUTE FUNCTION update_timestamp();
-
 
 -- +micrate Down
 -- SQL section 'Down' is executed when this migration is rolled back
