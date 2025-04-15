@@ -23,7 +23,7 @@ describe App::Models::Auth do
     user.id.should_not be_nil
     user.auth_sources.map(&.uid).should contain(auth.uid)
 
-    auth2 = App::Models::Auth.find!({auth.uid, auth.provider})
+    auth2 = App::Models::Auth.find!({auth.provider, auth.uid})
     auth2.uid.should eq auth.uid
 
     # user delete should destroy all auth models

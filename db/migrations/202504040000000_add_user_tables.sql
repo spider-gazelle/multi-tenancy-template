@@ -23,7 +23,7 @@ CREATE TABLE auth (
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    PRIMARY KEY (uid, provider)
+    PRIMARY KEY (provider, uid)
 );
 
 -- Auth table: Faster lookups by user_id
