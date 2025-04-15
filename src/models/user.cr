@@ -7,6 +7,8 @@ class App::Models::User < ::PgORM::Base
 
   include PgORM::Timestamps
 
+  has_many :auth_sources, class_name: Auth
+
   before_save do
     self.email = email.strip.downcase
     self.name = name.strip

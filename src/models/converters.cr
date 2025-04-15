@@ -11,7 +11,7 @@ module App
     end
 
     def self.to_json(val : T | Nil)
-      val.to_s.downcase
+      val.to_s.camelcase
     end
 
     def self.to_json(val : T | Nil, builder)
