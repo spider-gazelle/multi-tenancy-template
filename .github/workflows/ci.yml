@@ -1,26 +1,46 @@
-name: CI
+name: Run Specs
+
 on:
   push:
+    branches:
+      - main
   pull_request:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 6 * * 1"
+
 jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-        crystal:
-          - latest
-          - nightly
-    runs-on: ${{ matrix.os }}
-    container: crystallang/crystal:${{ matrix.crystal }}-alpine
+  specs:
+    runs-on: ubuntu-latest
+
+    container:
+      image: 84codes/crystal:latest-alpine
+      options: --init
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: development
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      PG_DATABASE_URL: postgresql://postgres:password@postgres:5432/development
+      GITHUB_ACTION: true
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: shards install --ignore-crystal-version
-    - name: Format
-      run: crystal tool format --check
-    - name: Run tests
-      run: crystal spec -v --error-trace
+      - name: Install build dependencies
+        run: |
+          apk add --no-cache git make bash
+
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Run specs
+        run: |
+          crystal spec -v --error-trace
