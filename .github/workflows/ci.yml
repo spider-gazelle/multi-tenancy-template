@@ -41,6 +41,9 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
+      - name: Install shards
+        run: shards install
+
       - name: Run specs
         run: |
           crystal spec -v --error-trace
