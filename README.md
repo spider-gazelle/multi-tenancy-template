@@ -1,14 +1,13 @@
 # Spider-Gazelle Multitenancy Starter
 
-[![CI](https://github.com/spider-gazelle/spider-gazelle/actions/workflows/ci.yml/badge.svg)](https://github.com/spider-gazelle/spider-gazelle/actions/workflows/ci.yml)
+[![CI](https://github.com/spider-gazelle/multi-tenancy-template/actions/workflows/ci.yml/badge.svg)](https://github.com/spider-gazelle/multi-tenancy-template/actions/workflows/ci.yml)
 
 Clone this repository to start building your own spider-gazelle based application.
 This is a template and as such, Do What the Fuck You Want To
 
 ## Documentation
 
-This builds on the basic Spider-Gazelle template to provide a good starting point for your application. User management.
-
+This builds on the basic Spider-Gazelle template to provide a good starting point for building a postresql backed application.
 
 ## Testing
 
@@ -21,6 +20,10 @@ alternatively you can run `docker compose up` directly
 ## Compiling
 
 `crystal build ./src/app.cr`
+
+or
+
+`shards build`
 
 ### Deploying
 
