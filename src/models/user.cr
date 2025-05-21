@@ -13,4 +13,8 @@ class App::Models::User < ::PgORM::Base
     self.email = email.strip.downcase
     self.name = name.strip
   end
+
+  def organizations
+    Organization.join(:inner, OrganizationUser, :organization_id).where("organization_users.user_id = ?", self.id)
+  end
 end

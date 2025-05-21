@@ -54,7 +54,7 @@ shards:
 
   multi_auth:
     git: https://github.com/spider-gazelle/multi_auth.git
-    version: 1.2.0+git.commit.5fa8730425f04bea6eeae47fa99e38b9522265c2
+    version: 1.2.0+git.commit.8cb43fb8064d7a0d2a6198e584b4d9b8a9ef4901
 
   mysql:
     git: https://github.com/crystal-lang/crystal-mysql.git
@@ -66,7 +66,7 @@ shards:
 
   pg-orm:
     git: https://github.com/spider-gazelle/pg-orm.git
-    version: 2.0.1
+    version: 2.0.3
 
   pool:
     git: https://github.com/ysbaddaden/pool.git

@@ -8,5 +8,39 @@ class App::Models::Organization < ::PgORM::Base
   attribute owner_id : UUID?
   belongs_to :owner, class_name: User
 
+  def users
+    User.join(:inner, OrganizationUser, :user_id).where("organization_users.organization_id = ?", self.id)
+  end
+
+  def remove(user : User)
+    OrganizationUser.find!({user.id, self.id}).destroy
+  end
+
+  def add(user : User, permission : App::Permissions = App::Permissions::User)
+    OrganizationUser.new(
+      user_id: user.id,
+      organization_id: self.id,
+      permission: permission
+    ).save!
+  end
+
+  def invite(user : User, permission : App::Permissions = App::Permissions::User, expires : Time? = nil)
+    OrganizationInvite.new(
+      email: user.email,
+      organization_id: self.id,
+      permission: permission,
+      expires: expires
+    ).save!
+  end
+
+  def invite(email : String, permission : App::Permissions = App::Permissions::User, expires : Time? = nil)
+    OrganizationInvite.new(
+      email: email,
+      organization_id: self.id,
+      permission: permission,
+      expires: expires
+    ).save!
+  end
+
   include PgORM::Timestamps
 end
