@@ -3,10 +3,9 @@ require "../spec_helper"
 describe App::Models::Organization do
   org = App::Models::Organization.new
 
-  Spec.around_each do |test|
-    org = App::Models::Organization.new
-    test.run
+  Spec.before_each do
     org.destroy rescue nil
+    org = App::Models::Organization.new
   end
 
   it "should be able to create an organization" do

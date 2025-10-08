@@ -5,14 +5,11 @@ module App::Models
     org = Organization.new
     user = User.new
 
-    Spec.around_each do |test|
+    Spec.before_each do
+      org.destroy rescue nil
+      user.destroy rescue nil
       org = Organization.new(name: "Testing").save!
       user = User.new(name: "Testing", email: "steve@orguser.com").save!
-
-      test.run
-
-      org.destroy
-      user.destroy
     end
 
     it "should be able to associate a user with an organisation" do

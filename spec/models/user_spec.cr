@@ -3,10 +3,9 @@ require "../spec_helper"
 describe App::Models::User do
   user = App::Models::User.new
 
-  Spec.around_each do |test|
+  Spec.before_each do
+    user.destroy rescue nil
     user = App::Models::User.new
-    test.run
-    user.destroy
   end
 
   it "should be able to create a user" do

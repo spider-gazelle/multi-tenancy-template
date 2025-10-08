@@ -3,10 +3,9 @@ require "../spec_helper"
 describe App::Models::Auth do
   auth = App::Models::Auth.new
 
-  Spec.around_each do |test|
+  Spec.before_each do
+    auth.destroy rescue nil
     auth = App::Models::Auth.new
-    test.run
-    auth.destroy
   end
 
   it "should associate a user with an authentication source" do
