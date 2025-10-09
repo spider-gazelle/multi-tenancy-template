@@ -1,15 +1,12 @@
 -- +micrate Up
 -- SQL in section 'Up' is executed when this migration is applied
 
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 -- Permission Enum
 CREATE TYPE permission AS ENUM ('Admin', 'Manager', 'User', 'Viewer');
 
 -- Users Table
 CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -31,7 +28,7 @@ CREATE INDEX idx_auth_user_id ON auth(user_id);
 
 -- Organizations Table
 CREATE TABLE organizations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
     owner_id UUID REFERENCES users(id) ON DELETE SET NULL,
     name TEXT NOT NULL,
     description TEXT,
@@ -58,7 +55,7 @@ CREATE INDEX idx_org_users_organization_id ON organization_users(organization_id
 
 -- OrganizationInvites Table
 CREATE TABLE organization_invites (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
     organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     email TEXT NOT NULL,
     secret TEXT NOT NULL,
@@ -72,6 +69,18 @@ CREATE TABLE organization_invites (
 CREATE INDEX idx_org_invites_email ON organization_invites(email);
 CREATE INDEX idx_org_invites_organization_id ON organization_invites(organization_id);
 CREATE INDEX idx_org_invites_expires ON organization_invites(expires);
+
+-- Organisation domains
+CREATE TABLE domains (
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
+    organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    domain TEXT NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE (domain)
+);
 
 -- +micrate Down
 -- SQL section 'Down' is executed when this migration is rolled back

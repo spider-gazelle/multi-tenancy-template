@@ -8,6 +8,15 @@ class App::Models::Organization < ::PgORM::Base
   attribute owner_id : UUID?
   belongs_to :owner, class_name: User
 
+  has_many :domains, class_name: Domain
+
+  include PgORM::Timestamps
+
+  before_save do
+    self.name = name.strip
+    self.description = description.try(&.strip.presence)
+  end
+
   def users
     User.join(:inner, OrganizationUser, :user_id).where("organization_users.organization_id = ?", self.id)
   end
@@ -41,6 +50,4 @@ class App::Models::Organization < ::PgORM::Base
       expires: expires
     ).save!
   end
-
-  include PgORM::Timestamps
 end
