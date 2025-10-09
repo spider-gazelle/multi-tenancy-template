@@ -4,7 +4,6 @@ describe App::Models::Auth do
   auth = App::Models::Auth.new
 
   Spec.before_each do
-    auth.destroy rescue nil
     auth = App::Models::Auth.new
   end
 

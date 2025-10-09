@@ -5,8 +5,6 @@ describe App::Models::Domain do
   domain = App::Models::Domain.new
 
   Spec.before_each do
-    org.destroy rescue nil
-    domain.destroy rescue nil
     org = App::Models::Organization.new
     org.name = "Testing"
     org.save!

@@ -4,7 +4,6 @@ describe App::Models::User do
   user = App::Models::User.new
 
   Spec.before_each do
-    user.destroy rescue nil
     user = App::Models::User.new
   end
 

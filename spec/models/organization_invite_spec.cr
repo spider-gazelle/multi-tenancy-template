@@ -6,9 +6,6 @@ describe App::Models::OrganizationInvite do
   invite = App::Models::OrganizationInvite.new
 
   Spec.before_each do
-    org.destroy rescue nil
-    user.destroy rescue nil
-    invite.destroy rescue nil
     org = App::Models::Organization.new
     user = App::Models::User.new
     invite = App::Models::OrganizationInvite.new

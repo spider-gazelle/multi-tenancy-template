@@ -4,16 +4,6 @@ require "webmock"
 describe App::OAuth do
   client = AC::SpecHelper.client
 
-  # Setup: Create test organization and OAuth provider
-  before_each do
-    # Clean up test data
-    App::Models::OrganizationUser.clear
-    App::Models::Auth.clear
-    App::Models::User.clear
-    App::Models::Oauth2Provider.clear
-    App::Models::Organization.clear
-  end
-
   it "should redirect to OAuth provider authorization page" do
     # Create test organization
     org = App::Models::Organization.new(

@@ -4,7 +4,6 @@ describe App::Models::Organization do
   org = App::Models::Organization.new
 
   Spec.before_each do
-    org.destroy rescue nil
     org = App::Models::Organization.new
   end
 

@@ -39,9 +39,12 @@ class App::OAuth < App::Base
     provider_str = provider.provider_string
     uid_str = oauth_user.uid
 
-    # Use a simple query that won't trigger compiler bugs
+    puts "provider: #{provider_str}"
+    puts "user_id: #{uid_str}"
+
+    # Search for existing auth instances
     existing_auth = App::Models::Auth
-      .where("provider = $1 AND uid = $2", provider_str, uid_str)
+      .where("provider = ? AND uid = ?", provider_str, uid_str)
       .limit(1)
       .to_a
       .first?
