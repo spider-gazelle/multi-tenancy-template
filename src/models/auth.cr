@@ -3,7 +3,8 @@ class App::Models::Auth < ::PgORM::Base
 
   primary_key :provider, :uid
 
-  # the OAuth2 provider that was used to authenticate
+  # the provider that was used to authenticate
+  # i.e. generic_oauth or google etc
   attribute provider : String
   attribute uid : String
 

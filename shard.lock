@@ -54,7 +54,7 @@ shards:
 
   multi_auth:
     git: https://github.com/spider-gazelle/multi_auth.git
-    version: 1.2.0+git.commit.8cb43fb8064d7a0d2a6198e584b4d9b8a9ef4901
+    version: 1.2.0+git.commit.b05f2d9022f3de73702eeaf6b935b829c492bfe5
 
   mysql:
     git: https://github.com/crystal-lang/crystal-mysql.git
@@ -79,4 +79,8 @@ shards:
   sqlite3:
     git: https://github.com/crystal-lang/crystal-sqlite3.git
     version: 0.19.0
+
+  webmock:
+    git: https://github.com/manastech/webmock.cr.git
+    version: 0.14.0+git.commit.fde6b20d5b80401a967e044b1a3e80ee391bed60
 

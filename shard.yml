@@ -23,6 +23,9 @@ development_dependencies:
     github: veelenga/ameba
   hot_topic:
     github: jgaskins/hot_topic
+  webmock:
+    github: manastech/webmock.cr
+    branch: master
 
 # compile target
 targets:

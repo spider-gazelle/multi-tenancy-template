@@ -11,5 +11,8 @@ Micrate::DB.connection_url = App::PG_DATABASE_URL
 Micrate::Cli.run_status
 Micrate::Cli.run_up
 
+# mock API requests
+require "webmock"
+
 # Your application config
 require "../src/config"
