@@ -1,20 +1,16 @@
 require "../spec_helper"
 
 describe App::Models::Domain do
-  org = App::Models::Organization.new
-  domain = App::Models::Domain.new
-
   Spec.before_each do
-    org.destroy rescue nil
-    domain.destroy rescue nil
-    org = App::Models::Organization.new
-    org.name = "Testing"
-    org.save!
-
-    domain = App::Models::Domain.new
+    App::Models::Organization.clear
+    App::Models::Domain.clear
   end
 
   it "should be able to create a domain" do
+    org = App::Models::Organization.new(name: "Testing")
+    org.save!
+
+    domain = App::Models::Domain.new
     domain.name = "Production"
     domain.domain = "Production.What.com"
     domain.organization = org
@@ -25,6 +21,10 @@ describe App::Models::Domain do
   end
 
   it "should not allow two domains with the same domain name" do
+    org = App::Models::Organization.new(name: "Testing")
+    org.save!
+
+    domain = App::Models::Domain.new
     domain.name = "Production"
     domain.domain = "Production.What.com"
     domain.organization = org

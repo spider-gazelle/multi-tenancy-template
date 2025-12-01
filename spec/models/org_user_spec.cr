@@ -2,38 +2,37 @@ require "../spec_helper"
 
 module App::Models
   describe OrganizationUser do
-    org : Organization? = nil
-    user : User? = nil
-
     Spec.before_each do
-      org.try(&.destroy) rescue nil
-      user.try(&.destroy) rescue nil
-      org = Organization.new(name: "Testing")
-      org.not_nil!.save!
-      user = User.new(name: "Testing", email: "steve@orguser.com")
-      user.not_nil!.save!
+      Organization.clear
+      User.clear
+      OrganizationUser.clear
     end
 
     it "should be able to associate a user with an organisation" do
-      o = org.not_nil!
-      u = user.not_nil!
-      o.add u
-      o.users.to_a.map(&.id).first?.should eq u.id
-      u.organizations.first.id.should eq o.id
+      org = Organization.new(name: "Testing")
+      org.save!
+      user = User.new(name: "Testing", email: "steve@orguser.com")
+      user.save!
+
+      org.add user
+      org.users.to_a.map(&.id).first?.should eq user.id
+      user.organizations.first.id.should eq org.id
     end
 
     it "should be able to associate multiple users with an organisation" do
-      o = org.not_nil!
-      u = user.not_nil!
+      org = Organization.new(name: "Testing")
+      org.save!
+      user = User.new(name: "Testing", email: "steve@orguser.com")
+      user.save!
       user2 = User.new(name: "User2", email: "user2@org.com")
       user2.save!
       user3 = User.new(name: "User3", email: "user3@org.com")
       user3.save!
 
-      o.add u
-      o.add user2
+      org.add user
+      org.add user2
 
-      o.users.map(&.id).to_set.should eq [u.id, user2.id].to_set
+      org.users.map(&.id).to_set.should eq [user.id, user2.id].to_set
       user3.organizations.to_a.should be_empty
 
       user2.destroy
@@ -43,17 +42,19 @@ module App::Models
     end
 
     it "should be able to associate multiple organisations with a user" do
-      o = org.not_nil!
-      u = user.not_nil!
+      org = Organization.new(name: "Testing")
+      org.save!
+      user = User.new(name: "Testing", email: "steve@orguser.com")
+      user.save!
       org2 = Organization.new(name: "org2")
       org2.save!
       org3 = Organization.new(name: "org3")
       org3.save!
 
-      o.add u
-      org2.add u
+      org.add user
+      org2.add user
 
-      u.organizations.map(&.id).to_set.should eq [o.id, org2.id].to_set
+      user.organizations.map(&.id).to_set.should eq [org.id, org2.id].to_set
       org3.users.to_a.should be_empty
 
       org2.destroy
@@ -63,23 +64,25 @@ module App::Models
     end
 
     it "use helper functions to manage users" do
-      o = org.not_nil!
-      u = user.not_nil!
+      org = Organization.new(name: "Testing")
+      org.save!
+      user = User.new(name: "Testing", email: "steve@orguser.com")
+      user.save!
       user2 = User.new(name: "User2", email: "user2@org.com")
       user2.save!
       user3 = User.new(name: "User3", email: "user3@org.com")
       user3.save!
 
-      o.add u
-      o.add user2
-      o.add user3
-      o.users.map(&.id).to_set.should eq [u.id, user2.id, user3.id].to_set
+      org.add user
+      org.add user2
+      org.add user3
+      org.users.map(&.id).to_set.should eq [user.id, user2.id, user3.id].to_set
 
-      o.remove u
-      o.remove user2
-      o.users.count.should eq 1
-      o.remove user3
-      o.users.count.should eq 0
+      org.remove user
+      org.remove user2
+      org.users.count.should eq 1
+      org.remove user3
+      org.users.count.should eq 0
       OrganizationUser.all.count.should eq 0
 
       user2.destroy
