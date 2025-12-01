@@ -18,6 +18,10 @@ dependencies:
   multi_auth:
     github: spider-gazelle/multi_auth
 
+  # Dotenv
+  dotenv:
+    github: gdotdesign/cr-dotenv
+
 development_dependencies:
   ameba:
     github: veelenga/ameba

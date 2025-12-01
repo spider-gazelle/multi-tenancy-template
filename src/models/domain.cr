@@ -1,3 +1,5 @@
+require "uuid/json"
+
 class App::Models::Domain < ::PgORM::Base
   table :domains
 

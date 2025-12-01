@@ -4,16 +4,39 @@ class App::Welcome < App::Base
 
   # A welcome message
   @[AC::Route::GET("/")]
-  def index : String
-    welcome_text = "You're being trampled by Spider-Gazelle!"
-    Log.warn { "logs can be collated using the request ID" }
+  def index
+    user = current_user
 
-    # You can use signals to change log levels at runtime
-    # USR1 is debugging, USR2 is info
-    # `kill -s USR1 %APP_PID`
-    Log.debug { "use signals to change log levels at runtime" }
+    output = if user
+               html = File.read("views/home.html")
+               html = html.gsub("{{USER_NAME}}", HTML.escape(user.name))
+               html = html.gsub("{{USER_EMAIL}}", HTML.escape(user.email))
 
-    welcome_text
+               # Add provider info if logged in via OAuth
+               provider = session["auth_provider"]?.try(&.to_s)
+               if provider && (provider == "google" || provider == "microsoft")
+                 provider_name = provider.capitalize
+                 html = html.gsub("{{AUTH_PROVIDER_INFO}}", "<br><small>via #{provider_name}</small>")
+                 html = html.gsub("{{LOGOUT_PROVIDER}}", "?provider=#{provider}")
+               else
+                 html = html.gsub("{{AUTH_PROVIDER_INFO}}", "")
+                 html = html.gsub("{{LOGOUT_PROVIDER}}", "")
+               end
+
+               # Add organization info
+               if org = current_organization
+                 org_info = %(<div class="user-info" style="margin-top: 1rem;"><strong>Current Organization:</strong> #{HTML.escape(org.name)}</div>)
+                 html = html.gsub("{{ORGANIZATION_INFO}}", org_info)
+               else
+                 html = html.gsub("{{ORGANIZATION_INFO}}", "")
+               end
+
+               html
+             else
+               File.read("views/home-guest.html")
+             end
+
+    render html: output
   end
 
   # For API applications the return value of the function is expected to work with
