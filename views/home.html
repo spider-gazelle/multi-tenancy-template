@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spider-Gazelle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="home">
+  <div class="container">
+    <div class="card">
+      <h1>You're being trampled by Spider-Gazelle!</h1>
+      <div class="user-info">
+        <strong>Logged in as:</strong> {{USER_NAME}} ({{USER_EMAIL}})
+        {{AUTH_PROVIDER_INFO}}
+      </div>
+      {{ORGANIZATION_INFO}}
+      <div style="margin-top: 1rem;">
+        <a href="/organizations" class="btn btn-secondary">Manage Organizations</a>
+        <a href="/auth/logout{{LOGOUT_PROVIDER}}" class="btn btn-primary">Logout</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

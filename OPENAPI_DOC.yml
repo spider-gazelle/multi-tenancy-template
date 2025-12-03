@@ -1,0 +1,2675 @@
+---
+openapi: 3.0.3
+info:
+  description: App description for OpenAPI docs
+  title: Spider-Gazelle
+  version: 2.0.0
+paths:
+  /auth/login:
+    get:
+      summary: Show login page
+      tags:
+      - Auth
+      operationId: App::Auth_login
+      parameters: []
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Handle username/password login
+      tags:
+      - Auth
+      operationId: App::Auth_login_post
+      parameters:
+      - name: email
+        in: query
+        description: User email
+        example: user@example.com
+        required: true
+        schema:
+          type: string
+      - name: password
+        in: query
+        description: User password
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /auth/oauth/{provider}:
+    get:
+      summary: Initiate OAuth flow
+      tags:
+      - Auth
+      operationId: App::Auth_oauth_initiate
+      parameters:
+      - name: provider
+        in: path
+        description: OAuth provider (google or microsoft)
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /auth/oauth/{provider}/callback:
+    get:
+      summary: OAuth callback handler
+      tags:
+      - Auth
+      operationId: App::Auth_oauth_callback
+      parameters:
+      - name: provider
+        in: path
+        description: OAuth provider (google or microsoft)
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_String___Nil_'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /auth/logout:
+    get:
+      summary: Logout
+      tags:
+      - Auth
+      operationId: App::Auth_logout
+      parameters:
+      - name: provider
+        in: query
+        description: Also logout from OAuth provider
+        schema:
+          type: string
+          nullable: true
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/domains:
+    get:
+      summary: List organization domains
+      tags:
+      - Domains
+      operationId: App::Domains_index
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/App__Models__Domain'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Create domain
+      tags:
+      - Domains
+      operationId: App::Domains_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App__Models__Domain'
+        required: true
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Models__Domain'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/domains/{domain_id}:
+    get:
+      summary: Get domain details
+      tags:
+      - Domains
+      operationId: App::Domains_show
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: domain_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Models__Domain'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    put:
+      summary: Update domain
+      tags:
+      - Domains
+      operationId: App::Domains_update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App__Models__Domain'
+        required: true
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: domain_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Models__Domain'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    delete:
+      summary: Delete domain
+      tags:
+      - Domains
+      operationId: App::Domains_destroy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: domain_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        202:
+          description: Accepted
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    patch:
+      summary: Update domain
+      tags:
+      - Domains
+      operationId: App::Domains_update{2}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App__Models__Domain'
+        required: true
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: domain_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Models__Domain'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations:
+    get:
+      summary: List user's organizations
+      tags:
+      - Organizations
+      operationId: App::Organizations_index
+      parameters: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/App__Models__Organization'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Create new organization
+      tags:
+      - Organizations
+      operationId: App::Organizations_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App__Models__Organization'
+        required: true
+      parameters: []
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Models__Organization'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}:
+    get:
+      summary: Get organization details
+      tags:
+      - Organizations
+      operationId: App::Organizations_show
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Models__Organization'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    put:
+      summary: Update organization
+      tags:
+      - Organizations
+      operationId: App::Organizations_update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App__Models__Organization'
+        required: true
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Models__Organization'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    delete:
+      summary: Delete organization
+      tags:
+      - Organizations
+      operationId: App::Organizations_destroy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        202:
+          description: Accepted
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    patch:
+      summary: Update organization
+      tags:
+      - Organizations
+      operationId: App::Organizations_update{2}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App__Models__Organization'
+        required: true
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Models__Organization'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/switch:
+    post:
+      summary: Switch current organization
+      tags:
+      - Organizations
+      operationId: App::Organizations_switch
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/members:
+    get:
+      summary: List organization members
+      tags:
+      - Organizations
+      operationId: App::Organizations_members
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/App__Models__OrganizationUser'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Add member to organization
+      tags:
+      - Organizations
+      operationId: App::Organizations_add_member
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App__Organizations__AddMemberParams'
+        required: true
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/members/{user_id}:
+    delete:
+      summary: Remove member from organization
+      tags:
+      - Organizations
+      operationId: App::Organizations_remove_member
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        202:
+          description: Accepted
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    patch:
+      summary: Update member permission
+      tags:
+      - Organizations
+      operationId: App::Organizations_update_member
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App__Organizations__UpdateMemberParams'
+        required: true
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/invites:
+    get:
+      summary: List organization invites
+      tags:
+      - Organizations
+      operationId: App::Organizations_invites
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/App__Models__OrganizationInvite'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Create organization invite
+      tags:
+      - Organizations
+      operationId: App::Organizations_create_invite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App__Organizations__InviteParams'
+        required: true
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Models__OrganizationInvite'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/invites/{invite_id}:
+    delete:
+      summary: Revoke organization invite
+      tags:
+      - Organizations
+      operationId: App::Organizations_revoke_invite
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: invite_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        202:
+          description: Accepted
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/invites/{invite_id}/accept:
+    post:
+      summary: Accept organization invite
+      tags:
+      - Organizations
+      operationId: App::Organizations_accept_invite
+      parameters:
+      - name: invite_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: secret
+        in: query
+        description: Secret token from invite
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /:
+    summary: description of the welcome klass
+    get:
+      summary: A welcome message
+      tags:
+      - Welcome
+      operationId: App::Welcome_index
+      parameters: []
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /api/{example}:
+    summary: description of the welcome klass
+    get:
+      summary: For API applications the return value of the function is expected to
+        work with
+      description: 'For API applications the return value of the function is expected
+        to work with
+
+        all of the responder blocks (see application.cr)
+
+        the various responses are returned based on the Accepts header'
+      tags:
+      - Welcome
+      operationId: App::Welcome_api
+      parameters:
+      - name: example
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: Int32
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NamedTuple_result__Int32_'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: For API applications the return value of the function is expected to
+        work with
+      description: 'For API applications the return value of the function is expected
+        to work with
+
+        all of the responder blocks (see application.cr)
+
+        the various responses are returned based on the Accepts header'
+      tags:
+      - Welcome
+      operationId: App::Welcome_api{3}
+      parameters:
+      - name: example
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: Int32
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NamedTuple_result__Int32_'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /api/other/route:
+    summary: description of the welcome klass
+    get:
+      summary: For API applications the return value of the function is expected to
+        work with
+      description: 'For API applications the return value of the function is expected
+        to work with
+
+        all of the responder blocks (see application.cr)
+
+        the various responses are returned based on the Accepts header'
+      tags:
+      - Welcome
+      operationId: App::Welcome_api{2}
+      parameters:
+      - name: example
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: Int32
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NamedTuple_result__Int32_'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /openapi:
+    summary: description of the welcome klass
+    get:
+      summary: returns the OpenAPI representation of this service
+      tags:
+      - Welcome
+      operationId: App::Welcome_openapi
+      parameters: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/YAML__Any'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+components:
+  schemas:
+    _String___Nil_:
+      type: string
+      nullable: true
+    App__Models__Domain:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        domain:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        organization_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+    App__Models__Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        subdomain:
+          type: string
+          nullable: true
+        owner_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+    App__Models__OrganizationUser:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          nullable: true
+        organization_id:
+          type: string
+          format: uuid
+          nullable: true
+        permission:
+          type: string
+          enum:
+          - admin
+          - manager
+          - user
+          - viewer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+    App__Organizations__AddMemberParams:
+      type: object
+      properties:
+        user_id:
+          type: string
+        permission:
+          type: string
+          enum:
+          - admin
+          - manager
+          - user
+          - viewer
+          nullable: true
+      required:
+      - user_id
+    App__Organizations__UpdateMemberParams:
+      type: object
+      properties:
+        permission:
+          type: string
+          enum:
+          - admin
+          - manager
+          - user
+          - viewer
+      required:
+      - permission
+    App__Models__OrganizationInvite:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        secret:
+          type: string
+          nullable: true
+        organization_id:
+          type: string
+          format: uuid
+          nullable: true
+        permission:
+          type: string
+          enum:
+          - admin
+          - manager
+          - user
+          - viewer
+          nullable: true
+        expires:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+    App__Organizations__InviteParams:
+      type: object
+      properties:
+        email:
+          type: string
+        permission:
+          type: string
+          enum:
+          - admin
+          - manager
+          - user
+          - viewer
+          nullable: true
+        expires:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - email
+    NamedTuple_result__Int32_:
+      type: object
+      properties:
+        result:
+          type: integer
+          format: Int32
+      required:
+      - result
+    YAML__Any:
+      type: object
+    ActionController__Error__ContentResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        accepts:
+          type: array
+          items:
+            type: string
+          nullable: true
+      required:
+      - error
+    ActionController__Error__ParameterResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        parameter:
+          type: string
+          nullable: true
+        restriction:
+          type: string
+          nullable: true
+      required:
+      - error
+    App__Base__CommonError:
+      type: object
+      properties:
+        error:
+          type: string
+          nullable: true
+        backtrace:
+          type: array
+          items:
+            type: string
+          nullable: true
+    App__Base__ValidationError:
+      type: object
+      properties:
+        error:
+          type: string
+        failures:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              reason:
+                type: string
+            required:
+            - field
+            - reason
+      required:
+      - error
+      - failures

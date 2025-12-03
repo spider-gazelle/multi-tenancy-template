@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizations - Spider-Gazelle</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .org-list {
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+        .org-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .org-info h3 {
+            margin: 0 0 0.5rem 0;
+        }
+        .org-info p {
+            margin: 0;
+            color: #666;
+        }
+        .org-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .create-org {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+        .badge-admin { background: #dc3545; color: white; }
+        .badge-manager { background: #ffc107; color: black; }
+        .badge-user { background: #28a745; color: white; }
+        .badge-viewer { background: #6c757d; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Organizations</h1>
+        
+        <div class="create-org">
+            <h2>Create New Organization</h2>
+            <form id="create-org-form">
+                <div class="form-group">
+                    <label for="name">Organization Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="subdomain">Subdomain (optional)</label>
+                    <input type="text" id="subdomain" name="subdomain" placeholder="acme">
+                    <small>Enter only the subdomain part (e.g., "acme" for acme.yourapp.com)</small>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description (optional)</label>
+                    <textarea id="description" name="description" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Organization</button>
+            </form>
+        </div>
+
+        <div class="org-list" id="org-list">
+            <!-- Organizations will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // Load organizations
+        async function loadOrganizations() {
+            const response = await fetch('/organizations');
+            const orgs = await response.json();
+            
+            const orgList = document.getElementById('org-list');
+            orgList.innerHTML = '';
+            
+            if (orgs.length === 0) {
+                orgList.innerHTML = '<p>No organizations yet. Create one above!</p>';
+                return;
+            }
+            
+            orgs.forEach(org => {
+                const card = document.createElement('div');
+                card.className = 'org-card';
+                card.innerHTML = `
+                    <div class="org-info">
+                        <h3>${org.name}</h3>
+                        <p>${org.description || 'No description'}</p>
+                    </div>
+                    <div class="org-actions">
+                        <button class="btn btn-primary" onclick="switchOrg('${org.id}')">Switch</button>
+                        <a href="/organizations/${org.id}/manage" class="btn btn-secondary">Manage</a>
+                    </div>
+                `;
+                orgList.appendChild(card);
+            });
+        }
+        
+        // Create organization
+        document.getElementById('create-org-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                name: formData.get('name'),
+                subdomain: formData.get('subdomain') || null,
+                description: formData.get('description') || null
+            };
+            
+            const response = await fetch('/organizations', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                e.target.reset();
+                loadOrganizations();
+                alert('Organization created successfully!');
+            } else {
+                const error = await response.json();
+                alert('Error: ' + (error.error || 'Failed to create organization'));
+            }
+        });
+        
+        // Switch organization
+        async function switchOrg(orgId) {
+            const response = await fetch(`/organizations/${orgId}/switch`, {
+                method: 'POST'
+            });
+            
+            if (response.ok) {
+                alert('Switched organization!');
+                window.location.href = '/';
+            } else {
+                alert('Failed to switch organization');
+            }
+        }
+        
+        // Load on page load
+        loadOrganizations();
+    </script>
+</body>
+</html>

@@ -20,9 +20,13 @@ shards:
     git: https://github.com/crystal-lang/crystal-db.git
     version: 0.11.0
 
+  dotenv:
+    git: https://github.com/gdotdesign/cr-dotenv.git
+    version: 1.0.0
+
   eventbus:
     git: https://github.com/spider-gazelle/eventbus.git
-    version: 1.0.0+git.commit.af63536d718348885a553dc4aa6debccc2946289
+    version: 1.0.0+git.commit.fab6102d472ce324db4df74c8df9f4a5fa22dafd
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
@@ -54,7 +58,7 @@ shards:
 
   multi_auth:
     git: https://github.com/spider-gazelle/multi_auth.git
-    version: 1.2.0+git.commit.8cb43fb8064d7a0d2a6198e584b4d9b8a9ef4901
+    version: 1.2.0+git.commit.7674dc8c22e1f8ce0989f4bffa6116ccabc63d1e
 
   mysql:
     git: https://github.com/crystal-lang/crystal-mysql.git
@@ -67,14 +71,6 @@ shards:
   pg-orm:
     git: https://github.com/spider-gazelle/pg-orm.git
     version: 2.0.5
-
-  pool:
-    git: https://github.com/ysbaddaden/pool.git
-    version: 0.2.4
-
-  redis:
-    git: https://github.com/stefanwille/crystal-redis.git
-    version: 2.9.1
 
   sqlite3:
     git: https://github.com/crystal-lang/crystal-sqlite3.git

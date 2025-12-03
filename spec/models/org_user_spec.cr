@@ -2,25 +2,32 @@ require "../spec_helper"
 
 module App::Models
   describe OrganizationUser do
-    org = Organization.new
-    user = User.new
-
     Spec.before_each do
-      org.destroy rescue nil
-      user.destroy rescue nil
-      org = Organization.new(name: "Testing").save!
-      user = User.new(name: "Testing", email: "steve@orguser.com").save!
+      Organization.clear
+      User.clear
+      OrganizationUser.clear
     end
 
     it "should be able to associate a user with an organisation" do
+      org = Organization.new(name: "Testing")
+      org.save!
+      user = User.new(name: "Testing", email: "steve@orguser.com")
+      user.save!
+
       org.add user
       org.users.to_a.map(&.id).first?.should eq user.id
       user.organizations.first.id.should eq org.id
     end
 
     it "should be able to associate multiple users with an organisation" do
-      user2 = User.new(name: "User2", email: "user2@org.com").save!
-      user3 = User.new(name: "User3", email: "user3@org.com").save!
+      org = Organization.new(name: "Testing")
+      org.save!
+      user = User.new(name: "Testing", email: "steve@orguser.com")
+      user.save!
+      user2 = User.new(name: "User2", email: "user2@org.com")
+      user2.save!
+      user3 = User.new(name: "User3", email: "user3@org.com")
+      user3.save!
 
       org.add user
       org.add user2
@@ -35,8 +42,14 @@ module App::Models
     end
 
     it "should be able to associate multiple organisations with a user" do
-      org2 = Organization.new(name: "org2").save!
-      org3 = Organization.new(name: "org3").save!
+      org = Organization.new(name: "Testing")
+      org.save!
+      user = User.new(name: "Testing", email: "steve@orguser.com")
+      user.save!
+      org2 = Organization.new(name: "org2")
+      org2.save!
+      org3 = Organization.new(name: "org3")
+      org3.save!
 
       org.add user
       org2.add user
@@ -51,8 +64,14 @@ module App::Models
     end
 
     it "use helper functions to manage users" do
-      user2 = User.new(name: "User2", email: "user2@org.com").save!
-      user3 = User.new(name: "User3", email: "user3@org.com").save!
+      org = Organization.new(name: "Testing")
+      org.save!
+      user = User.new(name: "Testing", email: "steve@orguser.com")
+      user.save!
+      user2 = User.new(name: "User2", email: "user2@org.com")
+      user2.save!
+      user3 = User.new(name: "User3", email: "user3@org.com")
+      user3.save!
 
       org.add user
       org.add user2

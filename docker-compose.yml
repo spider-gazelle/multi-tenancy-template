@@ -9,18 +9,22 @@ services:
       - ${PWD}/shard.override.yml:/app/shard.override.yml
       - ${PWD}/shard.yml:/app/shard.yml
       - ${PWD}/.ameba.yml:/app/.ameba.yml
+      - ${PWD}/views:/app/views
+      - ${PWD}/www:/app/www
+      # - ${PWD}/.env.example:/app/.env
     depends_on:
       - postgres
     environment:
       GITHUB_ACTION: ${GITHUB_ACTION:-}
-      PG_DATABASE_URL: ${PG_DATABASE_URL:-postgresql://postgres:password@postgres:5432/development}
+      PG_DATABASE_URL: postgresql://postgres:password@postgres:5432/development
     working_dir: /app
     entrypoint: ["crystal", "spec", "-v", "--error-trace"]
 
   postgres:
     image: postgres:18-alpine
+    hostname: postgres
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 30s
       timeout: 30s
       retries: 3
@@ -28,3 +32,5 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: development
+    ports:
+      - 5432:5432

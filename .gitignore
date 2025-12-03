@@ -6,3 +6,5 @@ app
 *.dwarf
 bin
 .DS_Store
+.env
+.vscode**

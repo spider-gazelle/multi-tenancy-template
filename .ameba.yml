@@ -1,0 +1,16 @@
+Metrics/CyclomaticComplexity:
+  Description: Disallows methods with a cyclomatic complexity higher than `MaxComplexity`
+  Enabled: false
+  Severity: Warning
+
+Lint/NotNil:
+  Description: Identifies usage of `not_nil!` calls
+  Enabled: false
+  Severity: Warning
+
+Lint/UselessAssign:
+  Description: Disallows useless variable assignments
+  Enabled: false
+  Severity: Warning
+Documentation/DocumentationAdmonition:
+  Enabled: false

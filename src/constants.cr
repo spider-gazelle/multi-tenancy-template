@@ -1,6 +1,9 @@
 require "action-controller/logger"
+require "dotenv"
 
 module App
+  Dotenv.load if File.exists?(".env")
+
   NAME = "Spider-Gazelle"
   {% begin %}
     VERSION = {{ `shards version "#{__DIR__}"`.chomp.stringify.downcase }}
