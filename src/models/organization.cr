@@ -11,7 +11,11 @@ class App::Models::Organization < ::PgORM::Base
   attribute owner_id : UUID?
   belongs_to :owner, class_name: User
 
+  attribute admin_group_id : UUID?
+  belongs_to :admin_group, class_name: Group
+
   has_many :domains, class_name: Domain
+  has_many :groups, class_name: Group
 
   include PgORM::Timestamps
 
@@ -60,5 +64,55 @@ class App::Models::Organization < ::PgORM::Base
       permission: permission,
       expires: expires
     ).save!
+  end
+
+  def create_admin_group!
+    return admin_group if admin_group_id
+
+    group = Group.new(
+      name: "Administrators",
+      description: "Organization administrators with full access",
+      permission: App::Permissions::Admin,
+      organization_id: self.id
+    )
+    group.save!
+
+    self.admin_group_id = group.id
+    save!
+
+    # Add owner to admin group if exists
+    if owner_id && (owner_user = owner)
+      group.add_user(owner_user, is_admin: true)
+    end
+
+    group
+  end
+
+  def ensure_admin_group!
+    return admin_group if admin_group_id && admin_group
+    create_admin_group!
+  end
+
+  def user_has_permission?(user : User, required_permission : App::Permissions) : Bool
+    # Check direct organization membership first (for backward compatibility)
+    org_user = OrganizationUser.find?({user.id, self.id})
+    if org_user && org_user.permission.value <= required_permission.value
+      return true
+    end
+
+    # Check group-based permissions
+    user_groups = Group.join(:inner, GroupUser, :group_id)
+      .where("groups.organization_id = ? AND group_users.user_id = ?", self.id, user.id)
+
+    user_groups.any? { |group| group.permission.value <= required_permission.value }
+  end
+
+  def user_is_admin?(user : User) : Bool
+    return false unless admin_group_id
+    admin_group.not_nil!.user_is_member?(user)
+  end
+
+  def user_can_manage_groups?(user : User) : Bool
+    user_is_admin?(user)
   end
 end

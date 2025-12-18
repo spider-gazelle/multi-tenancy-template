@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Settings - Spider-Gazelle</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            display: block;
+            align-items: initial;
+            justify-content: initial;
+            background: #f5f5f5;
+            padding: 0;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; background: transparent; box-shadow: none; border-radius: 0; }
+        .section { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; }
+        .section h2 { margin-top: 0; border-bottom: 2px solid #007bff; padding-bottom: 0.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.25rem; font-weight: bold; }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .form-group small { color: #666; font-size: 0.875rem; }
+        .btn { padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; font-size: 0.875rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .back-link { margin-bottom: 1rem; display: inline-block; }
+        .alert { padding: 1rem; border-radius: 4px; margin-bottom: 1rem; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .danger-zone { border-color: #dc3545; }
+        .danger-zone h2 { border-bottom-color: #dc3545; color: #dc3545; }
+        /* Toast notifications */
+        .toast-container { position: fixed; top: 1rem; right: 1rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
+        .toast { padding: 0.75rem 1rem; border-radius: 6px; color: white; font-size: 0.875rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: slideIn 0.3s ease; max-width: 300px; }
+        .toast-success { background: #28a745; }
+        .toast-error { background: #dc3545; }
+        .toast-info { background: #17a2b8; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div id="toast-container" class="toast-container"></div>
+    <div class="container">
+        <a href="#" id="back-link" class="back-link">← Back to Manage</a>
+        
+        <h1>Organization Settings</h1>
+
+        <div class="section">
+            <h2>General Settings</h2>
+            <form id="settings-form">
+                <div class="form-group">
+                    <label for="name">Organization Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Optional description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="subdomain">Subdomain</label>
+                    <input type="text" id="subdomain" name="subdomain" pattern="[a-z0-9][a-z0-9-]*[a-z0-9]?" placeholder="my-company">
+                    <small>Lowercase letters, numbers, and hyphens only</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+
+        <div class="section danger-zone">
+            <h2>Danger Zone</h2>
+            <p style="margin: 1rem 0;">Once you delete an organization, there is no going back. Please be certain.</p>
+            <button id="delete-btn" class="btn btn-danger">Delete Organization</button>
+        </div>
+    </div>
+
+    <script>
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.animation = 'slideOut 0.3s ease forwards'; setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        const orgId = window.location.pathname.split('/')[2];
+        document.getElementById('back-link').href = `/organizations/${orgId}/manage`;
+
+        async function loadOrganization() {
+            const response = await fetch(`/organizations/${orgId}`);
+            const org = await response.json();
+            document.getElementById('name').value = org.name || '';
+            document.getElementById('description').value = org.description || '';
+            document.getElementById('subdomain').value = org.subdomain || '';
+        }
+
+        document.getElementById('settings-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('name').value,
+                description: document.getElementById('description').value || null,
+                subdomain: document.getElementById('subdomain').value || null
+            };
+
+            const response = await fetch(`/organizations/${orgId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                showToast('Settings saved!', 'success');
+            } else {
+                const error = await response.json();
+                showToast(error.error || 'Failed to save', 'error');
+            }
+        });
+
+        document.getElementById('delete-btn').addEventListener('click', async () => {
+            const name = document.getElementById('name').value;
+            const confirmed = prompt(`Type "${name}" to confirm deletion:`);
+            if (confirmed !== name) {
+                showToast('Organization name did not match', 'error');
+                return;
+            }
+
+            const response = await fetch(`/organizations/${orgId}`, { method: 'DELETE' });
+            if (response.ok) {
+                showToast('Organization deleted', 'success');
+                setTimeout(() => window.location.href = '/organizations', 500);
+            } else {
+                showToast('Failed to delete organization', 'error');
+            }
+        });
+
+        loadOrganization();
+    </script>
+</body>
+</html>

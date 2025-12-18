@@ -9,7 +9,7 @@ paths:
     get:
       summary: Show login page
       tags:
-      - Auth
+        - Auth
       operationId: App::Auth_login
       parameters: []
       responses:
@@ -20,7 +20,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -29,7 +29,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -38,7 +38,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -47,7 +47,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -56,7 +56,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -67,29 +67,29 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     post:
       summary: Handle username/password login
       tags:
-      - Auth
+        - Auth
       operationId: App::Auth_login_post
       parameters:
-      - name: email
-        in: query
-        description: User email
-        example: user@example.com
-        required: true
-        schema:
-          type: string
-      - name: password
-        in: query
-        description: User password
-        required: true
-        schema:
-          type: string
+        - name: email
+          in: query
+          description: User email
+          example: user@example.com
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: User password
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
@@ -98,7 +98,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -107,7 +107,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -116,7 +116,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -125,7 +125,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -134,7 +134,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -145,7 +145,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -153,15 +153,15 @@ paths:
     get:
       summary: Initiate OAuth flow
       tags:
-      - Auth
+        - Auth
       operationId: App::Auth_oauth_initiate
       parameters:
-      - name: provider
-        in: path
-        description: OAuth provider (google or microsoft)
-        required: true
-        schema:
-          type: string
+        - name: provider
+          in: path
+          description: OAuth provider (google or microsoft)
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
@@ -170,7 +170,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -179,7 +179,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -188,7 +188,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -197,7 +197,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -206,7 +206,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -217,7 +217,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -225,22 +225,22 @@ paths:
     get:
       summary: OAuth callback handler
       tags:
-      - Auth
+        - Auth
       operationId: App::Auth_oauth_callback
       parameters:
-      - name: provider
-        in: path
-        description: OAuth provider (google or microsoft)
-        required: true
-        schema:
-          type: string
+        - name: provider
+          in: path
+          description: OAuth provider (google or microsoft)
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/_String___Nil_'
+                $ref: "#/components/schemas/_String___Nil_"
             text/html:
               schema:
                 type: string
@@ -249,7 +249,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -258,7 +258,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -267,7 +267,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -276,7 +276,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -285,7 +285,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -296,7 +296,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -304,15 +304,15 @@ paths:
     get:
       summary: Logout
       tags:
-      - Auth
+        - Auth
       operationId: App::Auth_logout
       parameters:
-      - name: provider
-        in: query
-        description: Also logout from OAuth provider
-        schema:
-          type: string
-          nullable: true
+        - name: provider
+          in: query
+          description: Also logout from OAuth provider
+          schema:
+            type: string
+            nullable: true
       responses:
         200:
           description: OK
@@ -321,7 +321,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -330,7 +330,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -339,7 +339,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -348,7 +348,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -357,7 +357,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -368,7 +368,300 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+  /auth/forgot-password:
+    get:
+      summary: Show forgot password page
+      tags:
+        - Auth
+      operationId: App::Auth_forgot_password
+      parameters: []
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Handle forgot password request
+      tags:
+        - Auth
+      operationId: App::Auth_forgot_password_post
+      parameters:
+        - name: email
+          in: query
+          description: User email
+          example: user@example.com
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+  /auth/reset-password:
+    get:
+      summary: Show reset password page
+      tags:
+        - Auth
+      operationId: App::Auth_reset_password
+      parameters:
+        - name: token
+          in: query
+          description: Password reset token
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Handle password reset
+      tags:
+        - Auth
+      operationId: App::Auth_reset_password_post
+      parameters:
+        - name: token
+          in: query
+          description: Password reset token
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: New password
+          required: true
+          schema:
+            type: string
+        - name: password_confirmation
+          in: query
+          description: Password confirmation
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -376,32 +669,65 @@ paths:
     get:
       summary: List organization domains
       tags:
-      - Domains
+        - Domains
       operationId: App::Domains_index
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: q
+          in: query
+          description: Search query for full-text search
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum number of results to return
+          schema:
+            type: integer
+            format: UInt32
+        - name: offset
+          in: query
+          description: Starting offset for pagination
+          schema:
+            type: integer
+            format: UInt32
+        - name: sort
+          in: query
+          description: Field to sort by
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: Sort order (asc or desc)
+          schema:
+            type: string
+        - name: ref
+          in: query
+          description:
+            a token for accessing the next page of results, provided in the
+            `Link` header
+          schema:
+            type: string
+            nullable: true
+        - name: fields
+          in: query
+          description: Comma-separated fields to search
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         200:
           description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/App__Models__Domain'
-            text/html:
-              schema:
-                type: string
         406:
           description: Not Acceptable
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -410,7 +736,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -419,7 +745,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -428,7 +754,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -437,7 +763,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -448,34 +774,34 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     post:
       summary: Create domain
       tags:
-      - Domains
+        - Domains
       operationId: App::Domains_create
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/App__Models__Domain'
+              $ref: "#/components/schemas/App__Models__Domain"
         required: true
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         201:
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Models__Domain'
+                $ref: "#/components/schemas/App__Models__Domain"
             text/html:
               schema:
                 type: string
@@ -484,7 +810,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -493,7 +819,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -502,7 +828,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -511,7 +837,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -520,7 +846,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -531,7 +857,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -539,26 +865,26 @@ paths:
     get:
       summary: Get domain details
       tags:
-      - Domains
+        - Domains
       operationId: App::Domains_show
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: domain_id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: domain_id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Models__Domain'
+                $ref: "#/components/schemas/App__Models__Domain"
             text/html:
               schema:
                 type: string
@@ -567,7 +893,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -576,7 +902,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -585,7 +911,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -594,7 +920,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -603,7 +929,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -614,39 +940,39 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     put:
       summary: Update domain
       tags:
-      - Domains
+        - Domains
       operationId: App::Domains_update
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/App__Models__Domain'
+              $ref: "#/components/schemas/App__Models__Domain"
         required: true
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: domain_id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: domain_id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Models__Domain'
+                $ref: "#/components/schemas/App__Models__Domain"
             text/html:
               schema:
                 type: string
@@ -655,7 +981,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -664,7 +990,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -673,7 +999,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -682,7 +1008,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -691,7 +1017,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -702,26 +1028,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     delete:
       summary: Delete domain
       tags:
-      - Domains
+        - Domains
       operationId: App::Domains_destroy
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: domain_id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: domain_id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         202:
           description: Accepted
@@ -730,7 +1056,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -739,7 +1065,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -748,7 +1074,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -757,7 +1083,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -766,7 +1092,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -777,39 +1103,39 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     patch:
       summary: Update domain
       tags:
-      - Domains
+        - Domains
       operationId: App::Domains_update{2}
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/App__Models__Domain'
+              $ref: "#/components/schemas/App__Models__Domain"
         required: true
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: domain_id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: domain_id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Models__Domain'
+                $ref: "#/components/schemas/App__Models__Domain"
             text/html:
               schema:
                 type: string
@@ -818,7 +1144,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -827,7 +1153,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -836,7 +1162,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -845,7 +1171,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -854,7 +1180,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -865,35 +1191,287 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+  /group-invites/{id}/accept:
+    get:
+      summary: GET /groups/invites/:id/accept?secret=xxx
+      tags:
+        - GroupInvites
+      operationId: App::GroupInvites_show
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: secret
+          in: query
+          description: Invite secret token
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: POST /groups/invites/:id/accept
+      tags:
+        - GroupInvites
+      operationId: App::GroupInvites_accept
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: secret
+          in: query
+          description: Invite secret token
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+  /organizations/list:
+    get:
+      summary: List user's organizations (JSON API) with search and pagination
+      tags:
+        - Organizations
+      operationId: App::Organizations_index
+      parameters:
+        - name: q
+          in: query
+          description: Search query for full-text search
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum number of results to return
+          schema:
+            type: integer
+            format: UInt32
+        - name: offset
+          in: query
+          description: Starting offset for pagination
+          schema:
+            type: integer
+            format: UInt32
+        - name: sort
+          in: query
+          description: Field to sort by
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: Sort order (asc or desc)
+          schema:
+            type: string
+        - name: ref
+          in: query
+          description:
+            a token for accessing the next page of results, provided in the
+            `Link` header
+          schema:
+            type: string
+            nullable: true
+        - name: fields
+          in: query
+          description: Comma-separated fields to search
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
   /organizations:
     get:
-      summary: List user's organizations
+      summary: Show organizations management page
       tags:
-      - Organizations
-      operationId: App::Organizations_index
+        - Organizations
+      operationId: App::Organizations_index_html
       parameters: []
       responses:
         200:
           description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/App__Models__Organization'
-            text/html:
-              schema:
-                type: string
         406:
           description: Not Acceptable
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -902,7 +1480,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -911,7 +1489,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -920,7 +1498,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -929,7 +1507,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -940,20 +1518,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     post:
       summary: Create new organization
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_create
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/App__Models__Organization'
+              $ref: "#/components/schemas/App__Models__Organization"
         required: true
       parameters: []
       responses:
@@ -962,7 +1540,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Models__Organization'
+                $ref: "#/components/schemas/App__Models__Organization"
             text/html:
               schema:
                 type: string
@@ -971,7 +1549,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -980,7 +1558,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -989,7 +1567,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -998,7 +1576,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1007,7 +1585,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1018,7 +1596,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1026,21 +1604,21 @@ paths:
     get:
       summary: Get organization details
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_show
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Models__Organization'
+                $ref: "#/components/schemas/App__Models__Organization"
             text/html:
               schema:
                 type: string
@@ -1049,7 +1627,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1058,7 +1636,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1067,7 +1645,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1076,7 +1654,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1085,7 +1663,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1096,34 +1674,34 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     put:
       summary: Update organization
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_update
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/App__Models__Organization'
+              $ref: "#/components/schemas/App__Models__Organization"
         required: true
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Models__Organization'
+                $ref: "#/components/schemas/App__Models__Organization"
             text/html:
               schema:
                 type: string
@@ -1132,7 +1710,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1141,7 +1719,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1150,7 +1728,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1159,7 +1737,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1168,7 +1746,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1179,21 +1757,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     delete:
       summary: Delete organization
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_destroy
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         202:
           description: Accepted
@@ -1202,7 +1780,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1211,7 +1789,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1220,7 +1798,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1229,7 +1807,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1238,7 +1816,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1249,34 +1827,34 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     patch:
       summary: Update organization
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_update{2}
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/App__Models__Organization'
+              $ref: "#/components/schemas/App__Models__Organization"
         required: true
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Models__Organization'
+                $ref: "#/components/schemas/App__Models__Organization"
             text/html:
               schema:
                 type: string
@@ -1285,7 +1863,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1294,7 +1872,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1303,7 +1881,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1312,7 +1890,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1321,7 +1899,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1332,7 +1910,78 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/manage:
+    get:
+      summary: Show organization management page
+      tags:
+        - Organizations
+      operationId: App::Organizations_manage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1340,23 +1989,30 @@ paths:
     post:
       summary: Switch current organization
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_switch
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NamedTuple_message__String__organization__App__Models__Organization_"
+            text/html:
+              schema:
+                type: string
         406:
           description: Not Acceptable
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1365,7 +2021,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1374,7 +2030,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1383,7 +2039,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1392,7 +2048,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1403,7 +2059,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1411,14 +2067,14 @@ paths:
     get:
       summary: List organization members
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_members
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
@@ -1427,7 +2083,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/App__Models__OrganizationUser'
+                  $ref: "#/components/schemas/App__Organizations__MemberResponse"
             text/html:
               schema:
                 type: string
@@ -1436,7 +2092,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1445,7 +2101,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1454,7 +2110,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1463,7 +2119,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1472,7 +2128,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1483,27 +2139,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     post:
       summary: Add member to organization
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_add_member
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/App__Organizations__AddMemberParams'
+              $ref: "#/components/schemas/App__Organizations__AddMemberParams"
         required: true
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
@@ -1512,7 +2168,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1521,7 +2177,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1530,7 +2186,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1539,7 +2195,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1548,7 +2204,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1559,7 +2215,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1567,19 +2223,19 @@ paths:
     delete:
       summary: Remove member from organization
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_remove_member
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: user_id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         202:
           description: Accepted
@@ -1588,7 +2244,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1597,7 +2253,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1606,7 +2262,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1615,7 +2271,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1624,7 +2280,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1635,32 +2291,32 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     patch:
       summary: Update member permission
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_update_member
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/App__Organizations__UpdateMemberParams'
+              $ref: "#/components/schemas/App__Organizations__UpdateMemberParams"
         required: true
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: user_id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
@@ -1669,7 +2325,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1678,7 +2334,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1687,7 +2343,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1696,7 +2352,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1705,7 +2361,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1716,7 +2372,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1724,14 +2380,14 @@ paths:
     get:
       summary: List organization invites
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_invites
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
@@ -1740,7 +2396,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/App__Models__OrganizationInvite'
+                  $ref: "#/components/schemas/App__Models__OrganizationInvite"
             text/html:
               schema:
                 type: string
@@ -1749,7 +2405,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1758,7 +2414,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1767,7 +2423,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1776,7 +2432,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1785,7 +2441,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1796,34 +2452,34 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     post:
       summary: Create organization invite
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_create_invite
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/App__Organizations__InviteParams'
+              $ref: "#/components/schemas/App__Organizations__InviteParams"
         required: true
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         201:
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Models__OrganizationInvite'
+                $ref: "#/components/schemas/App__Models__OrganizationInvite"
             text/html:
               schema:
                 type: string
@@ -1832,7 +2488,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1841,7 +2497,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1850,7 +2506,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1859,7 +2515,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1868,7 +2524,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1879,7 +2535,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1887,19 +2543,19 @@ paths:
     delete:
       summary: Revoke organization invite
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_revoke_invite
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: invite_id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: invite_id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         202:
           description: Accepted
@@ -1908,7 +2564,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1917,7 +2573,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1926,7 +2582,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -1935,7 +2591,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -1944,7 +2600,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1955,7 +2611,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -1963,20 +2619,20 @@ paths:
     post:
       summary: Accept organization invite
       tags:
-      - Organizations
+        - Organizations
       operationId: App::Organizations_accept_invite
       parameters:
-      - name: invite_id
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: secret
-        in: query
-        description: Secret token from invite
-        required: true
-        schema:
-          type: string
+        - name: invite_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: secret
+          in: query
+          description: Secret token from invite
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
@@ -1985,7 +2641,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -1994,7 +2650,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -2003,7 +2659,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -2012,7 +2668,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -2021,7 +2677,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -2032,7 +2688,918 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/groups:
+    get:
+      summary: Groups management page
+      tags:
+        - Organizations
+      operationId: App::Organizations_groups_html
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Create group
+      tags:
+        - Organizations
+      operationId: App::Organizations_create_group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/App__Models__Group"
+        required: true
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Models__Group"
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/groups/list:
+    get:
+      summary: List groups (JSON API)
+      tags:
+        - Organizations
+      operationId: App::Organizations_groups
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/App__Models__Group"
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/groups/{group_id}:
+    get:
+      summary: Get group details
+      tags:
+        - Organizations
+      operationId: App::Organizations_show_group
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Models__Group"
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+    put:
+      summary: Update group
+      tags:
+        - Organizations
+      operationId: App::Organizations_update_group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/App__Models__Group"
+        required: true
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Models__Group"
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+    delete:
+      summary: Delete group
+      tags:
+        - Organizations
+      operationId: App::Organizations_destroy_group
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        202:
+          description: Accepted
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+    patch:
+      summary: Update group
+      tags:
+        - Organizations
+      operationId: App::Organizations_update_group{2}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/App__Models__Group"
+        required: true
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Models__Group"
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/groups/{group_id}/users:
+    get:
+      summary: List group users
+      tags:
+        - Organizations
+      operationId: App::Organizations_group_users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/App__Models__User"
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Add user to group
+      tags:
+        - Organizations
+      operationId: App::Organizations_add_group_user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/App__Organizations__AddGroupUserParams"
+        required: true
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Models__GroupUser"
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/groups/{group_id}/users/{user_id}:
+    delete:
+      summary: Remove user from group
+      tags:
+        - Organizations
+      operationId: App::Organizations_remove_group_user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        202:
+          description: Accepted
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/groups/{group_id}/invites:
+    post:
+      summary: Create group invite
+      tags:
+        - Organizations
+      operationId: App::Organizations_create_group_invite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/App__Organizations__GroupInviteParams"
+        required: true
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Models__GroupInvite"
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__ValidationError"
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -2041,9 +3608,51 @@ paths:
     get:
       summary: A welcome message
       tags:
-      - Welcome
+        - Welcome
       operationId: App::Welcome_index
-      parameters: []
+      parameters:
+        - name: q
+          in: query
+          description: Search query for full-text search
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum number of results to return
+          schema:
+            type: integer
+            format: UInt32
+        - name: offset
+          in: query
+          description: Starting offset for pagination
+          schema:
+            type: integer
+            format: UInt32
+        - name: sort
+          in: query
+          description: Field to sort by
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: Sort order (asc or desc)
+          schema:
+            type: string
+        - name: ref
+          in: query
+          description:
+            a token for accessing the next page of results, provided in the
+            `Link` header
+          schema:
+            type: string
+            nullable: true
+        - name: fields
+          in: query
+          description: Comma-separated fields to search
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         200:
           description: OK
@@ -2052,7 +3661,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -2061,7 +3670,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -2070,7 +3679,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -2079,7 +3688,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -2088,7 +3697,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -2099,38 +3708,40 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
   /api/{example}:
     summary: description of the welcome klass
     get:
-      summary: For API applications the return value of the function is expected to
+      summary:
+        For API applications the return value of the function is expected to
         work with
-      description: 'For API applications the return value of the function is expected
+      description:
+        "For API applications the return value of the function is expected
         to work with
 
         all of the responder blocks (see application.cr)
 
-        the various responses are returned based on the Accepts header'
+        the various responses are returned based on the Accepts header"
       tags:
-      - Welcome
+        - Welcome
       operationId: App::Welcome_api
       parameters:
-      - name: example
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: Int32
+        - name: example
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: Int32
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NamedTuple_result__Int32_'
+                $ref: "#/components/schemas/NamedTuple_result__Int32_"
             text/html:
               schema:
                 type: string
@@ -2139,7 +3750,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -2148,7 +3759,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -2157,7 +3768,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -2166,7 +3777,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -2175,7 +3786,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -2186,36 +3797,38 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
     post:
-      summary: For API applications the return value of the function is expected to
+      summary:
+        For API applications the return value of the function is expected to
         work with
-      description: 'For API applications the return value of the function is expected
+      description:
+        "For API applications the return value of the function is expected
         to work with
 
         all of the responder blocks (see application.cr)
 
-        the various responses are returned based on the Accepts header'
+        the various responses are returned based on the Accepts header"
       tags:
-      - Welcome
+        - Welcome
       operationId: App::Welcome_api{3}
       parameters:
-      - name: example
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: Int32
+        - name: example
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: Int32
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NamedTuple_result__Int32_'
+                $ref: "#/components/schemas/NamedTuple_result__Int32_"
             text/html:
               schema:
                 type: string
@@ -2224,7 +3837,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -2233,7 +3846,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -2242,7 +3855,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -2251,7 +3864,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -2260,7 +3873,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -2271,38 +3884,40 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
   /api/other/route:
     summary: description of the welcome klass
     get:
-      summary: For API applications the return value of the function is expected to
+      summary:
+        For API applications the return value of the function is expected to
         work with
-      description: 'For API applications the return value of the function is expected
+      description:
+        "For API applications the return value of the function is expected
         to work with
 
         all of the responder blocks (see application.cr)
 
-        the various responses are returned based on the Accepts header'
+        the various responses are returned based on the Accepts header"
       tags:
-      - Welcome
+        - Welcome
       operationId: App::Welcome_api{2}
       parameters:
-      - name: example
-        in: query
-        required: true
-        schema:
-          type: integer
-          format: Int32
+        - name: example
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: Int32
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NamedTuple_result__Int32_'
+                $ref: "#/components/schemas/NamedTuple_result__Int32_"
             text/html:
               schema:
                 type: string
@@ -2311,7 +3926,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -2320,7 +3935,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -2329,7 +3944,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -2338,7 +3953,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -2347,7 +3962,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -2358,7 +3973,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -2367,7 +3982,7 @@ paths:
     get:
       summary: returns the OpenAPI representation of this service
       tags:
-      - Welcome
+        - Welcome
       operationId: App::Welcome_openapi
       parameters: []
       responses:
@@ -2376,7 +3991,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/YAML__Any'
+                $ref: "#/components/schemas/YAML__Any"
             text/html:
               schema:
                 type: string
@@ -2385,7 +4000,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -2394,7 +4009,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+                $ref: "#/components/schemas/ActionController__Error__ContentResponse"
             text/html:
               schema:
                 type: string
@@ -2403,7 +4018,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__ValidationError'
+                $ref: "#/components/schemas/App__Base__ValidationError"
             text/html:
               schema:
                 type: string
@@ -2412,7 +4027,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionController__Error__ParameterResponse'
+                $ref: "#/components/schemas/ActionController__Error__ParameterResponse"
             text/html:
               schema:
                 type: string
@@ -2421,7 +4036,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -2432,7 +4047,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/App__Base__CommonError'
+                $ref: "#/components/schemas/App__Base__CommonError"
             text/html:
               schema:
                 type: string
@@ -2489,6 +4104,10 @@ components:
           type: string
           format: uuid
           nullable: true
+        admin_group_id:
+          type: string
+          format: uuid
+          nullable: true
         created_at:
           type: string
           format: date-time
@@ -2497,33 +4116,85 @@ components:
           type: string
           format: date-time
           nullable: true
-    App__Models__OrganizationUser:
+    NamedTuple_message__String__organization__App__Models__Organization_:
+      type: object
+      properties:
+        message:
+          type: string
+        organization:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: true
+            name:
+              type: string
+              nullable: true
+            description:
+              type: string
+              nullable: true
+            subdomain:
+              type: string
+              nullable: true
+            owner_id:
+              type: string
+              format: uuid
+              nullable: true
+            admin_group_id:
+              type: string
+              format: uuid
+              nullable: true
+            created_at:
+              type: string
+              format: date-time
+              nullable: true
+            updated_at:
+              type: string
+              format: date-time
+              nullable: true
+      required:
+        - message
+        - organization
+    App__Organizations__MemberResponse:
       type: object
       properties:
         user_id:
           type: string
           format: uuid
-          nullable: true
         organization_id:
           type: string
           format: uuid
-          nullable: true
         permission:
           type: string
           enum:
-          - admin
-          - manager
-          - user
-          - viewer
-          nullable: true
+            - admin
+            - manager
+            - user
+            - viewer
         created_at:
           type: string
           format: date-time
           nullable: true
-        updated_at:
-          type: string
-          format: date-time
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+            email:
+              type: string
+          required:
+            - id
+            - name
+            - email
           nullable: true
+      required:
+        - user_id
+        - organization_id
+        - permission
     App__Organizations__AddMemberParams:
       type: object
       properties:
@@ -2532,25 +4203,25 @@ components:
         permission:
           type: string
           enum:
-          - admin
-          - manager
-          - user
-          - viewer
+            - admin
+            - manager
+            - user
+            - viewer
           nullable: true
       required:
-      - user_id
+        - user_id
     App__Organizations__UpdateMemberParams:
       type: object
       properties:
         permission:
           type: string
           enum:
-          - admin
-          - manager
-          - user
-          - viewer
+            - admin
+            - manager
+            - user
+            - viewer
       required:
-      - permission
+        - permission
     App__Models__OrganizationInvite:
       type: object
       properties:
@@ -2560,6 +4231,10 @@ components:
           nullable: true
         email:
           type: string
+          nullable: true
+        user_id:
+          type: string
+          format: uuid
           nullable: true
         secret:
           type: string
@@ -2571,10 +4246,10 @@ components:
         permission:
           type: string
           enum:
-          - admin
-          - manager
-          - user
-          - viewer
+            - admin
+            - manager
+            - user
+            - viewer
           nullable: true
         expires:
           type: string
@@ -2596,17 +4271,146 @@ components:
         permission:
           type: string
           enum:
-          - admin
-          - manager
-          - user
-          - viewer
+            - admin
+            - manager
+            - user
+            - viewer
           nullable: true
         expires:
           type: string
           format: date-time
           nullable: true
       required:
-      - email
+        - email
+    App__Models__Group:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        permission:
+          type: string
+          enum:
+            - admin
+            - manager
+            - user
+            - viewer
+          nullable: true
+        organization_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+    App__Models__User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        password_hash:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+    App__Organizations__AddGroupUserParams:
+      type: object
+      properties:
+        user_id:
+          type: string
+        is_admin:
+          type: boolean
+          nullable: true
+      required:
+        - user_id
+    App__Models__GroupUser:
+      type: object
+      properties:
+        group_id:
+          type: string
+          format: uuid
+          nullable: true
+        user_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_admin:
+          type: boolean
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+    App__Organizations__GroupInviteParams:
+      type: object
+      properties:
+        email:
+          type: string
+        expires_in_hours:
+          type: integer
+          format: Int32
+          nullable: true
+      required:
+        - email
+    App__Models__GroupInvite:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        secret:
+          type: string
+          nullable: true
+        expires:
+          type: string
+          format: date-time
+          nullable: true
+        group_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
     NamedTuple_result__Int32_:
       type: object
       properties:
@@ -2614,7 +4418,7 @@ components:
           type: integer
           format: Int32
       required:
-      - result
+        - result
     YAML__Any:
       type: object
     ActionController__Error__ContentResponse:
@@ -2628,7 +4432,7 @@ components:
             type: string
           nullable: true
       required:
-      - error
+        - error
     ActionController__Error__ParameterResponse:
       type: object
       properties:
@@ -2641,7 +4445,7 @@ components:
           type: string
           nullable: true
       required:
-      - error
+        - error
     App__Base__CommonError:
       type: object
       properties:
@@ -2668,8 +4472,8 @@ components:
               reason:
                 type: string
             required:
-            - field
-            - reason
+              - field
+              - reason
       required:
-      - error
-      - failures
+        - error
+        - failures

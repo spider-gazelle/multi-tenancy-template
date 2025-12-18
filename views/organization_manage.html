@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Organization - Spider-Gazelle</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            display: block;
+            align-items: initial;
+            justify-content: initial;
+            background: #f5f5f5;
+            padding: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            background: transparent;
+            box-shadow: none;
+            border-radius: 0;
+        }
+        .section {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .section h2 {
+            margin-top: 0;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 0.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+        .badge-admin { background: #dc3545; color: white; }
+        .badge-manager { background: #ffc107; color: black; }
+        .badge-user { background: #28a745; color: white; }
+        .badge-viewer { background: #6c757d; color: white; }
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.875rem;
+        }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-inline {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+        .form-inline .form-group {
+            flex: 1;
+        }
+        .back-link {
+            margin-bottom: 1rem;
+            display: inline-block;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .page-header-left h1 {
+            margin: 0 0 0.25rem 0;
+        }
+        .page-header-left p {
+            margin: 0;
+            color: #666;
+        }
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav-link-groups {
+            background: #17a2b8;
+            color: white;
+        }
+        .nav-link-groups:hover {
+            background: #138496;
+        }
+        .nav-link-settings {
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        .nav-link-settings:hover {
+            background: #f8f9fa;
+        }
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .toast {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+        }
+        .toast-success { background: #28a745; }
+        .toast-error { background: #dc3545; }
+        .toast-info { background: #17a2b8; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="toast-container" class="toast-container"></div>
+    <div class="container">
+        <a href="/organizations" class="back-link">← Back to Organizations</a>
+        
+        <div class="page-header">
+            <div class="page-header-left">
+                <h1 id="org-name">Loading...</h1>
+                <p id="org-description"></p>
+            </div>
+            <div class="nav-links">
+                <a href="#" id="groups-link" class="nav-link nav-link-groups">👥 Groups</a>
+                <a href="#" id="settings-link" class="nav-link nav-link-settings">⚙️ Settings</a>
+            </div>
+        </div>
+
+        <!-- Invite Section -->
+        <div class="section">
+            <h2>Invite Members</h2>
+            <form id="invite-form" class="form-inline">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="permission">Role</label>
+                    <select id="permission" name="permission">
+                        <option value="Viewer">Viewer</option>
+                        <option value="User" selected>User</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Send Invite</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Pending Invites -->
+        <div class="section">
+            <h2>Pending Invites</h2>
+            <table id="invites-table">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Sent</th>
+                        <th>Expires</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="invites-list">
+                    <tr><td colspan="5">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Members Section -->
+        <div class="section">
+            <h2>Members</h2>
+            <table id="members-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="members-list">
+                    <tr><td colspan="5">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        const orgId = window.location.pathname.split('/')[2];
+
+        async function loadOrganization() {
+            const response = await fetch(`/organizations/${orgId}`);
+            const org = await response.json();
+            
+            document.getElementById('org-name').textContent = org.name;
+            document.getElementById('org-description').textContent = org.description || '';
+        }
+
+        async function loadMembers() {
+            const response = await fetch(`/organizations/${orgId}/members`);
+            const members = await response.json();
+            
+            const tbody = document.getElementById('members-list');
+            tbody.innerHTML = '';
+            
+            if (members.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">No members yet</td></tr>';
+                return;
+            }
+            
+            for (const member of members) {
+                const row = document.createElement('tr');
+                const date = new Date(member.created_at).toLocaleDateString();
+                row.innerHTML = `
+                    <td>${member.user?.name || 'Unknown'}</td>
+                    <td>${member.user?.email || 'Unknown'}</td>
+                    <td><span class="badge badge-${member.permission.toLowerCase()}">${member.permission}</span></td>
+                    <td>${date}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="removeMember('${member.user_id}')">Remove</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            }
+        }
+
+        async function loadInvites() {
+            const response = await fetch(`/organizations/${orgId}/invites`);
+            const invites = await response.json();
+            
+            const tbody = document.getElementById('invites-list');
+            tbody.innerHTML = '';
+            
+            if (invites.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">No pending invites</td></tr>';
+                return;
+            }
+            
+            invites.forEach(invite => {
+                const row = document.createElement('tr');
+                const sent = new Date(invite.created_at).toLocaleDateString();
+                const expires = invite.expires ? new Date(invite.expires).toLocaleDateString() : 'Never';
+                row.innerHTML = `
+                    <td>${invite.email}</td>
+                    <td><span class="badge badge-${invite.permission.toLowerCase()}">${invite.permission}</span></td>
+                    <td>${sent}</td>
+                    <td>${expires}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="revokeInvite('${invite.id}')">Revoke</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        document.getElementById('invite-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                email: formData.get('email'),
+                permission: formData.get('permission')
+            };
+            
+            const response = await fetch(`/organizations/${orgId}/invites`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                e.target.reset();
+                loadInvites();
+                showToast('Invitation sent!', 'success');
+            } else {
+                const error = await response.json();
+                showToast(error.error || 'Failed to send invite', 'error');
+            }
+        });
+
+        async function revokeInvite(inviteId) {
+            if (!confirm('Are you sure you want to revoke this invitation?')) return;
+            
+            const response = await fetch(`/organizations/${orgId}/invites/${inviteId}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                loadInvites();
+                showToast('Invitation revoked', 'success');
+            } else {
+                showToast('Failed to revoke invitation', 'error');
+            }
+        }
+
+        async function removeMember(userId) {
+            if (!confirm('Are you sure you want to remove this member?')) return;
+            
+            const response = await fetch(`/organizations/${orgId}/members/${userId}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                loadMembers();
+                showToast('Member removed', 'success');
+            } else {
+                const error = await response.json();
+                showToast(error.error || 'Failed to remove member', 'error');
+            }
+        }
+
+        // Load data on page load
+        loadOrganization();
+        loadMembers();
+        loadInvites();
+        
+        // Set navigation links
+        document.getElementById('groups-link').href = `/organizations/${orgId}/groups`;
+        document.getElementById('settings-link').href = `/organizations/${orgId}/settings`;
+    </script>
+</body>
+</html>

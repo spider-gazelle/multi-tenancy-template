@@ -5,6 +5,7 @@ require "./constants"
 # Application code
 require "uuid"
 require "pg-orm"
+require "./services/*"
 require "./controllers/application"
 require "./controllers/*"
 require "./models/*"
@@ -30,6 +31,9 @@ module App
 
   # connect to the database
   PgORM::Database.parse(PG_DATABASE_URL)
+
+  # Configure email service
+  Services::EmailService.configure
 
   # Add handlers that should run before your application
   ActionController::Server.before(

@@ -16,17 +16,17 @@ class App::Welcome < App::Base
                provider = session["auth_provider"]?.try(&.to_s)
                if provider && (provider == "google" || provider == "microsoft")
                  provider_name = provider.capitalize
-                 html = html.gsub("{{AUTH_PROVIDER_INFO}}", "<br><small>via #{provider_name}</small>")
+                 html = html.gsub("{{AUTH_PROVIDER_INFO}}", %(<div class="info-row"><span class="info-label">Login Method</span><span class="info-value">#{provider_name}</span></div>))
                  html = html.gsub("{{LOGOUT_PROVIDER}}", "?provider=#{provider}")
                else
                  html = html.gsub("{{AUTH_PROVIDER_INFO}}", "")
                  html = html.gsub("{{LOGOUT_PROVIDER}}", "")
                end
 
-               # Add organization info
-               if org = current_organization
-                 org_info = %(<div class="user-info" style="margin-top: 1rem;"><strong>Current Organization:</strong> #{HTML.escape(org.name)}</div>)
-                 html = html.gsub("{{ORGANIZATION_INFO}}", org_info)
+               # Add organization count
+               org_count = user_organizations.size
+               if org_count > 0
+                 html = html.gsub("{{ORGANIZATION_INFO}}", %(<div class="info-row"><span class="info-label">Organizations</span><span class="info-value">#{org_count}</span></div>))
                else
                  html = html.gsub("{{ORGANIZATION_INFO}}", "")
                end

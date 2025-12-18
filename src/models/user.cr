@@ -21,6 +21,20 @@ class App::Models::User < ::PgORM::Base
     Organization.join(:inner, OrganizationUser, :organization_id).where("organization_users.user_id = ?", self.id)
   end
 
+  def groups
+    Group.join(:inner, GroupUser, :group_id).where("group_users.user_id = ?", self.id)
+  end
+
+  def groups_in_organization(organization : Organization)
+    Group.join(:inner, GroupUser, :group_id)
+      .where("group_users.user_id = ? AND groups.organization_id = ?", self.id, organization.id)
+  end
+
+  def admin_groups
+    Group.join(:inner, GroupUser, :group_id)
+      .where("group_users.user_id = ? AND group_users.is_admin = true", self.id)
+  end
+
   # Set password (hashes it automatically)
   def password=(new_password : String)
     @password_hash = Crypto::Bcrypt::Password.create(new_password).to_s

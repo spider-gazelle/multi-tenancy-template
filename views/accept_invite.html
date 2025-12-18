@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accept Organization Invitation - Spider Gazelle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .invite-details {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .invite-details h2 {
+            color: #2c3e50;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .invite-details p {
+            color: #555;
+            margin-bottom: 8px;
+        }
+        .invite-details .label {
+            font-weight: 600;
+            color: #333;
+        }
+        .permission-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .permission-admin {
+            background: #e74c3c;
+            color: white;
+        }
+        .permission-manager {
+            background: #f39c12;
+            color: white;
+        }
+        .permission-user {
+            background: #3498db;
+            color: white;
+        }
+        .permission-viewer {
+            background: #95a5a6;
+            color: white;
+        }
+        .actions {
+            display: flex;
+            gap: 15px;
+        }
+        button, .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        button:hover, .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-accept {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+        }
+        .btn-decline {
+            background: #ecf0f1;
+            color: #555;
+        }
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffc107;
+        }
+        .login-prompt {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+        .login-prompt a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .login-prompt a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Organization Invitation</h1>
+        <p class="subtitle">You've been invited to join an organization</p>
+        
+        <div id="error-message"></div>
+        
+        <div class="invite-details">
+            <h2 id="org-name">{{ORG_NAME}}</h2>
+            <p id="org-description" style="color: #7f8c8d; font-style: italic; margin-bottom: 15px;">{{ORG_DESCRIPTION}}</p>
+            <p><span class="label">Invited by:</span> <span id="inviter-name">{{INVITER_NAME}}</span></p>
+            <p><span class="label">Your role:</span> <span class="permission-badge permission-{{PERMISSION_LOWER}}" id="permission">{{PERMISSION}}</span></p>
+            <p id="expires-info" style="color: #e74c3c; margin-top: 10px;">{{EXPIRES_INFO}}</p>
+        </div>
+
+        <div id="logged-in-section">
+            <form method="POST" action="/organizations/invites/{{INVITE_ID}}/accept">
+                <input type="hidden" name="secret" value="{{SECRET}}">
+                <div class="actions">
+                    <button type="submit" class="btn-accept">Accept Invitation</button>
+                    <a href="/" class="btn btn-decline">Decline</a>
+                </div>
+            </form>
+        </div>
+
+        <div id="login-prompt" class="login-prompt" style="display: none;">
+            <p>You need to be logged in to accept this invitation.</p>
+            <a href="/auth/login?redirect=/organizations/invites/{{INVITE_ID}}/accept?secret={{SECRET}}">Sign In</a>
+        </div>
+    </div>
+
+    <script>
+        // Check for error message
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        
+        if (error) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = decodeURIComponent(error.replace(/\+/g, ' '));
+            document.getElementById('error-message').replaceWith(errorDiv);
+        }
+    </script>
+</body>
+</html>

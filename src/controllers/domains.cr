@@ -38,8 +38,18 @@ class App::Domains < App::Base
 
   # List organization domains
   @[AC::Route::GET("/:id/domains")]
-  def index : Array(Models::Domain)
-    Models::Domain.where(organization_id: current_org.id).to_a
+  def index
+    params = search_params
+    query = Models::Domain.where(organization_id: current_org.id)
+
+    # Apply search
+    query = apply_search(query, params["q"].as(String), params["fields"].as(Array(String)))
+
+    # Apply sorting
+    query = apply_sort(query, params["sort"].as(String), params["order"].as(String))
+
+    # Paginate and return results
+    paginate_results(query, "domains", "/organizations/#{current_org.id}/domains")
   end
 
   # Get domain details
