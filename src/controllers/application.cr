@@ -1,7 +1,10 @@
 require "uuid"
 require "../error"
+require "../helpers/pagination"
 
 abstract class App::Base < ActionController::Base
+  include Pagination
+
   # Configure your log source name
   # NOTE:: this is chaining from Log
   Log = ::App::Log.for("controller")
@@ -11,17 +14,45 @@ abstract class App::Base < ActionController::Base
 
   @current_user : Models::User? = nil
   @current_organization : Models::Organization? = nil
+  @current_api_key : Models::ApiKey? = nil
 
-  # Get current user from session
+  # Get current user from session or API key
   def current_user : Models::User?
     return @current_user if @current_user
 
+    # Try API key first (from Authorization header)
+    if api_key = current_api_key
+      @current_user = api_key.user
+      return @current_user
+    end
+
+    # Fall back to session
     if user_id_value = session["user_id"]?
       user_id = user_id_value.is_a?(String) ? user_id_value : user_id_value.to_s
       @current_user = Models::User.find?(UUID.new(user_id))
     end
 
     @current_user
+  end
+
+  # Get current API key from Authorization header
+  def current_api_key : Models::ApiKey?
+    return @current_api_key if @current_api_key
+
+    auth_header = request.headers["Authorization"]?
+    return nil unless auth_header
+
+    if auth_header.starts_with?("Bearer sk_")
+      raw_key = auth_header.sub("Bearer ", "")
+      @current_api_key = Models::ApiKey.authenticate(raw_key)
+    end
+
+    @current_api_key
+  end
+
+  # Check if request is authenticated via API key
+  def api_key_auth? : Bool
+    !current_api_key.nil?
   end
 
   # Get current organization from session
@@ -52,17 +83,27 @@ abstract class App::Base < ActionController::Base
   def user_permission_in_org(org : Models::Organization) : Permissions?
     return nil unless user = current_user
 
+    # Check direct organization membership first (for backward compatibility)
     org_user = Models::OrganizationUser.find?({user.id, org.id})
-    org_user.try(&.permission)
+    direct_permission = org_user.try(&.permission)
+
+    # Check group-based permissions
+    user_groups = Models::Group.join(:inner, Models::GroupUser, :group_id)
+      .where("groups.organization_id = ? AND group_users.user_id = ?", org.id, user.id)
+
+    group_permissions = user_groups.map(&.permission)
+
+    # Return the highest permission level (lowest enum value)
+    all_permissions = [direct_permission, group_permissions].flatten.compact
+    return nil if all_permissions.empty?
+
+    all_permissions.min_by(&.value)
   end
 
   # Check if user has at least the specified permission level
   def has_permission?(org : Models::Organization, min_permission : Permissions) : Bool
-    permission = user_permission_in_org(org)
-    return false unless permission
-
-    # Lower enum value = higher permission (Admin=0, Viewer=3)
-    permission.value <= min_permission.value
+    return org.user_has_permission?(current_user.not_nil!, min_permission) if current_user
+    false
   end
 
   # Check if user is authenticated (returns boolean)
@@ -73,6 +114,32 @@ abstract class App::Base < ActionController::Base
   # Require authentication
   def require_auth!
     raise Error::Unauthorized.new("Authentication required") unless current_user
+  end
+
+  # Require API key with specific scope
+  def require_api_key_scope!(scope : String)
+    raise Error::Forbidden.new("API key required") unless api_key = current_api_key
+    raise Error::Forbidden.new("Insufficient API key scope") unless api_key.has_scope?(scope)
+  end
+
+  # Log an audit event
+  def audit_log(
+    action : String,
+    resource_type : String,
+    resource_id : UUID? = nil,
+    organization : Models::Organization? = nil,
+    details : Hash(String, JSON::Any::Type)? = nil,
+  )
+    Models::AuditLog.log(
+      action: action,
+      resource_type: resource_type,
+      resource_id: resource_id,
+      user: current_user,
+      organization: organization,
+      details: details,
+      ip_address: client_ip,
+      user_agent: request.headers["User-Agent"]?
+    )
   end
 
   # Require organization membership
@@ -107,6 +174,40 @@ abstract class App::Base < ActionController::Base
   @[AC::Route::Filter(:before_action)]
   def set_date_header
     response.headers["Date"] = HTTP.format_time(Time.utc)
+  end
+
+  getter! search_params : Hash(String, String | UInt32 | Array(String))
+
+  @[AC::Route::Filter(:before_action, only: [:index], converters: {fields: ConvertStringArray})]
+  def build_search_params(
+    @[AC::Param::Info(name: "q", description: "Search query for full-text search")]
+    query : String = "*",
+    @[AC::Param::Info(description: "Maximum number of results to return")]
+    limit : UInt32 = DEFAULT_LIMIT,
+    @[AC::Param::Info(description: "Starting offset for pagination")]
+    offset : UInt32 = 0_u32,
+    @[AC::Param::Info(description: "Field to sort by")]
+    sort : String = "name",
+    @[AC::Param::Info(description: "Sort order (asc or desc)")]
+    order : String = "asc",
+    @[AC::Param::Info(description: "a token for accessing the next page of results, provided in the `Link` header")]
+    ref : String? = nil,
+    @[AC::Param::Info(description: "Comma-separated fields to search")]
+    fields : Array(String) = [] of String,
+  )
+    limit = MAX_LIMIT if limit > MAX_LIMIT
+    limit = 1_u32 if limit < 1
+
+    search_params = {
+      "q"      => query,
+      "limit"  => limit,
+      "offset" => offset,
+      "sort"   => sort,
+      "order"  => order,
+      "fields" => fields,
+    }
+    search_params["ref"] = ref.not_nil! if ref.presence
+    @search_params = search_params
   end
 
   # ========================

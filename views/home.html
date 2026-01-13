@@ -1,23 +1,164 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Spider-Gazelle</title>
+  <meta charset="UTF-8">
+  <title>Dashboard - Spider-Gazelle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    body {
+      display: block;
+      background: #f5f5f5;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .dashboard {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .user-name {
+      color: #666;
+      font-size: 0.875rem;
+    }
+    .logout-btn {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      color: #dc3545;
+      border: 1px solid #dc3545;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+    .logout-btn:hover {
+      background: #dc3545;
+      color: white;
+    }
+    .welcome-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      color: white;
+      margin-bottom: 2rem;
+    }
+    .welcome-card h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.75rem;
+    }
+    .welcome-card p {
+      margin: 0;
+      opacity: 0.9;
+    }
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .action-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .action-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .action-card h3 {
+      margin: 0 0 0.5rem 0;
+      color: #333;
+    }
+    .action-card p {
+      margin: 0;
+      color: #666;
+      font-size: 0.875rem;
+    }
+    .info-section {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .info-section h3 {
+      margin: 0 0 1rem 0;
+      color: #333;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    .info-label {
+      color: #666;
+    }
+    .info-value {
+      color: #333;
+      font-weight: 500;
+    }
+  </style>
 </head>
-<body class="home">
-  <div class="container">
-    <div class="card">
-      <h1>You're being trampled by Spider-Gazelle!</h1>
-      <div class="user-info">
-        <strong>Logged in as:</strong> {{USER_NAME}} ({{USER_EMAIL}})
-        {{AUTH_PROVIDER_INFO}}
+<body>
+  <div class="dashboard">
+    <div class="header">
+      <h1>Spider-Gazelle</h1>
+      <div class="user-menu">
+        <a href="/profile" class="user-name" style="text-decoration: none;">{{USER_NAME}}</a>
+        <a href="/auth/logout{{LOGOUT_PROVIDER}}" class="logout-btn">Logout</a>
       </div>
+    </div>
+
+    <div class="welcome-card">
+      <h2>Welcome back, {{USER_NAME}}!</h2>
+      <p>Manage your organizations and teams from your dashboard.</p>
+    </div>
+
+    <div class="quick-actions">
+      <a href="/organizations" class="action-card">
+        <h3>Organizations</h3>
+        <p>Create and manage your organizations, invite members, and configure settings.</p>
+      </a>
+      <a href="/organizations" class="action-card">
+        <h3>Teams &amp; Groups</h3>
+        <p>Organize users into groups with different permission levels.</p>
+      </a>
+      <a href="/profile" class="action-card">
+        <h3>Profile</h3>
+        <p>Update your profile, change password, and manage API keys.</p>
+      </a>
+    </div>
+
+    <div class="info-section">
+      <h3>Account Information</h3>
+      <div class="info-row">
+        <span class="info-label">Email</span>
+        <span class="info-value">{{USER_EMAIL}}</span>
+      </div>
+      {{AUTH_PROVIDER_INFO}}
       {{ORGANIZATION_INFO}}
-      <div style="margin-top: 1rem;">
-        <a href="/organizations" class="btn btn-secondary">Manage Organizations</a>
-        <a href="/auth/logout{{LOGOUT_PROVIDER}}" class="btn btn-primary">Logout</a>
-      </div>
     </div>
   </div>
 </body>

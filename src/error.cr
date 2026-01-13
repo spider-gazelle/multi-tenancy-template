@@ -18,6 +18,9 @@ module App
     class Conflict < Error
     end
 
+    class BadRequest < Error
+    end
+
     record Field, field : Symbol, message : String
 
     class ModelValidation < Error

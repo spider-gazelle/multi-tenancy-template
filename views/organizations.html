@@ -6,9 +6,67 @@
     <title>Organizations - Spider-Gazelle</title>
     <link rel="stylesheet" href="/styles.css">
     <style>
+        body {
+            display: block;
+            align-items: initial;
+            justify-content: initial;
+            background: #f5f5f5;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem;
+            background: transparent;
+            box-shadow: none;
+            border-radius: 0;
+        }
+        .header {
+            max-width: 800px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+        .header h1 {
+            margin: 0;
+            white-space: nowrap;
+        }
+        .header a {
+            text-decoration: none;
+            color: #007bff;
+            white-space: nowrap;
+        }
+        .search-filter {
+            max-width: 800px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+        .search-filter-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .search-filter-row input {
+            flex: 1;
+            min-width: 0;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .search-filter-row select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
         .org-list {
             max-width: 800px;
             margin: 2rem auto;
+            padding: 0 1rem;
         }
         .org-card {
             background: white;
@@ -19,9 +77,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
+        }
+        .org-info {
+            flex: 1;
+            min-width: 0;
         }
         .org-info h3 {
             margin: 0 0 0.5rem 0;
+            word-break: break-word;
         }
         .org-info p {
             margin: 0;
@@ -30,22 +94,32 @@
         .org-actions {
             display: flex;
             gap: 0.5rem;
+            flex-shrink: 0;
+            align-items: center;
         }
-        .btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 4px;
+        .org-actions .btn {
+            padding: 0.5rem 1rem !important;
+            border: none !important;
+            border-radius: 4px !important;
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            height: 36px !important;
+            box-sizing: border-box;
+            font-size: 0.875rem !important;
+            width: auto !important;
+            margin-bottom: 0 !important;
         }
-        .btn-primary {
-            background: #007bff;
-            color: white;
+        .org-actions .btn-primary {
+            background: #007bff !important;
+            color: white !important;
         }
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
+        .org-actions .btn-secondary {
+            background: #6c757d !important;
+            color: white !important;
         }
         .btn-danger {
             background: #dc3545;
@@ -53,14 +127,22 @@
         }
         .create-org {
             max-width: 800px;
-            margin: 2rem auto;
+            margin: 0 auto 2rem auto;
+            padding: 0 1rem;
+        }
+        .create-org-inner {
             background: white;
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 1.5rem;
         }
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
         .form-group {
             margin-bottom: 1rem;
+            flex: 1;
         }
         .form-group label {
             display: block;
@@ -73,6 +155,13 @@
             padding: 0.5rem;
             border: 1px solid #ddd;
             border-radius: 4px;
+            box-sizing: border-box;
+        }
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
         }
         .badge {
             display: inline-block;
@@ -85,67 +174,244 @@
         .badge-manager { background: #ffc107; color: black; }
         .badge-user { background: #28a745; color: white; }
         .badge-viewer { background: #6c757d; color: white; }
+        
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .toast {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+        }
+        .toast-success { background: #28a745; }
+        .toast-error { background: #dc3545; }
+        .toast-info { background: #17a2b8; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @media (max-width: 600px) {
+            .org-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .org-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .search-filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-filter-row select {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
+    <div id="toast-container" class="toast-container"></div>
     <div class="container">
-        <h1>Your Organizations</h1>
-        
-        <div class="create-org">
-            <h2>Create New Organization</h2>
-            <form id="create-org-form">
-                <div class="form-group">
-                    <label for="name">Organization Name</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="subdomain">Subdomain (optional)</label>
-                    <input type="text" id="subdomain" name="subdomain" placeholder="acme">
-                    <small>Enter only the subdomain part (e.g., "acme" for acme.yourapp.com)</small>
-                </div>
-                <div class="form-group">
-                    <label for="description">Description (optional)</label>
-                    <textarea id="description" name="description" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Create Organization</button>
-            </form>
+        <div class="header">
+            <h1>Organizations</h1>
+            <a href="/">← Back to Home</a>
         </div>
 
+        <div class="create-org">
+            <div class="create-org-inner">
+                <h2 style="margin-top: 0; margin-bottom: 1rem;">Create New Organization</h2>
+                <form id="create-org-form">
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label for="name">Organization Name</label>
+                            <input type="text" id="name" name="name" placeholder="My Company" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="subdomain">Subdomain <span style="font-weight: normal; color: #666;">(optional)</span></label>
+                            <input type="text" id="subdomain" name="subdomain" placeholder="my-company">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description <span style="font-weight: normal; color: #666;">(optional)</span></label>
+                        <input type="text" id="description" name="description" placeholder="A brief description of your organization">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Organization</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-filter">
+            <div class="search-filter-row">
+                <input type="text" id="search-input" placeholder="Search organizations...">
+                <select id="sort-select">
+                    <option value="name:asc">Name (A-Z)</option>
+                    <option value="name:desc">Name (Z-A)</option>
+                    <option value="created_at:desc">Newest First</option>
+                    <option value="created_at:asc">Oldest First</option>
+                </select>
+            </div>
+        </div>
+        
         <div class="org-list" id="org-list">
             <!-- Organizations will be loaded here -->
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination" style="max-width: 800px; margin: 1rem auto; padding: 0 1rem; text-align: center; display: none;">
+            <button id="prev-btn" class="btn btn-secondary" onclick="prevPage()" disabled>← Previous</button>
+            <span id="page-info" style="margin: 0 1rem;"></span>
+            <button id="next-btn" class="btn btn-secondary" onclick="nextPage()" disabled>Next →</button>
         </div>
     </div>
 
     <script>
-        // Load organizations
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        let currentOffset = 0;
+        let totalCount = 0;
+        const limit = 10;
+        let searchTimeout = null;
+
+        // Load organizations with search and pagination
         async function loadOrganizations() {
-            const response = await fetch('/organizations');
-            const orgs = await response.json();
+            try {
+                const searchQuery = document.getElementById('search-input').value || '*';
+                const sortValue = document.getElementById('sort-select').value;
+                const [sort, order] = sortValue.split(':');
+                
+                const params = new URLSearchParams({
+                    q: searchQuery,
+                    limit: limit,
+                    offset: currentOffset,
+                    sort: sort,
+                    order: order
+                });
+                
+                const response = await fetch(`/organizations/list?${params}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                // Get total count from header
+                totalCount = parseInt(response.headers.get('X-Total-Count') || '0');
+                
+                const orgs = await response.json();
+                const orgList = document.getElementById('org-list');
+                orgList.innerHTML = '';
+                
+                if (orgs.length === 0) {
+                    orgList.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No organizations found. Create one below!</p>';
+                    updatePagination(0);
+                    return;
+                }
+                
+                orgs.forEach(org => {
+                    const card = document.createElement('div');
+                    card.className = 'org-card';
+                    card.innerHTML = `
+                        <div class="org-info">
+                            <h3>${escapeHtml(org.name)}</h3>
+                            <p>${escapeHtml(org.description || 'No description')}</p>
+                            ${org.subdomain ? `<small>Subdomain: ${escapeHtml(org.subdomain)}</small>` : ''}
+                        </div>
+                        <div class="org-actions">
+                            <a href="/organizations/${org.id}/manage" class="btn btn-primary">Manage</a>
+                        </div>
+                    `;
+                    orgList.appendChild(card);
+                });
+                
+                updatePagination(orgs.length);
+            } catch (error) {
+                console.error('Error loading organizations:', error);
+                const orgList = document.getElementById('org-list');
+                orgList.innerHTML = '<p style="text-align: center; color: #dc3545; padding: 2rem;">Error loading organizations. Please refresh the page.</p>';
+            }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function updatePagination(currentCount) {
+            const pagination = document.getElementById('pagination');
+            const pageInfo = document.getElementById('page-info');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
             
-            const orgList = document.getElementById('org-list');
-            orgList.innerHTML = '';
-            
-            if (orgs.length === 0) {
-                orgList.innerHTML = '<p>No organizations yet. Create one above!</p>';
+            if (totalCount <= limit) {
+                pagination.style.display = 'none';
                 return;
             }
             
-            orgs.forEach(org => {
-                const card = document.createElement('div');
-                card.className = 'org-card';
-                card.innerHTML = `
-                    <div class="org-info">
-                        <h3>${org.name}</h3>
-                        <p>${org.description || 'No description'}</p>
-                    </div>
-                    <div class="org-actions">
-                        <button class="btn btn-primary" onclick="switchOrg('${org.id}')">Switch</button>
-                        <a href="/organizations/${org.id}/manage" class="btn btn-secondary">Manage</a>
-                    </div>
-                `;
-                orgList.appendChild(card);
-            });
+            pagination.style.display = 'block';
+            const currentPage = Math.floor(currentOffset / limit) + 1;
+            const totalPages = Math.ceil(totalCount / limit);
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages} (${totalCount} total)`;
+            
+            prevBtn.disabled = currentOffset === 0;
+            nextBtn.disabled = currentOffset + currentCount >= totalCount;
         }
+        
+        function prevPage() {
+            if (currentOffset >= limit) {
+                currentOffset -= limit;
+                loadOrganizations();
+            }
+        }
+        
+        function nextPage() {
+            if (currentOffset + limit < totalCount) {
+                currentOffset += limit;
+                loadOrganizations();
+            }
+        }
+        
+        // Search with debounce
+        document.getElementById('search-input').addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentOffset = 0;
+                loadOrganizations();
+            }, 300);
+        });
+        
+        // Sort change
+        document.getElementById('sort-select').addEventListener('change', () => {
+            currentOffset = 0;
+            loadOrganizations();
+        });
         
         // Create organization
         document.getElementById('create-org-form').addEventListener('submit', async (e) => {
@@ -167,26 +433,12 @@
             if (response.ok) {
                 e.target.reset();
                 loadOrganizations();
-                alert('Organization created successfully!');
+                showToast('Organization created!', 'success');
             } else {
                 const error = await response.json();
-                alert('Error: ' + (error.error || 'Failed to create organization'));
+                showToast(error.error || 'Failed to create organization', 'error');
             }
         });
-        
-        // Switch organization
-        async function switchOrg(orgId) {
-            const response = await fetch(`/organizations/${orgId}/switch`, {
-                method: 'POST'
-            });
-            
-            if (response.ok) {
-                alert('Switched organization!');
-                window.location.href = '/';
-            } else {
-                alert('Failed to switch organization');
-            }
-        }
         
         // Load on page load
         loadOrganizations();

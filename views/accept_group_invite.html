@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Accept Group Invitation</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        .card { border: 1px solid #ddd; border-radius: 8px; padding: 30px; background: #f9f9f9; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn:hover { background: #0056b3; }
+        .info { background: #e7f3ff; padding: 15px; border-radius: 4px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Group Invitation</h1>
+        
+        <div class="info">
+            <p><strong>Group:</strong> <%= current_group.name %></p>
+            <p><strong>Organization:</strong> <%= organization.name %></p>
+            <% if current_group.description %>
+            <p><strong>Description:</strong> <%= current_group.description %></p>
+            <% end %>
+            <p><strong>Permission Level:</strong> <%= current_group.permission %></p>
+        </div>
+
+        <p>You've been invited to join this group. Please log in to accept the invitation.</p>
+        
+        <a href="/auth/login?redirect=<%= request.path %>?<%= request.query %>" class="btn">
+            Log In to Accept Invitation
+        </a>
+        
+        <p style="margin-top: 30px; font-size: 0.9em; color: #666;">
+            Don't have an account? You'll need to create one first, then return to this invitation link.
+        </p>
+    </div>
+</body>
+</html>

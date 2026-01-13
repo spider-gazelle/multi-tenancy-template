@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Groups - Spider-Gazelle</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            display: block;
+            align-items: initial;
+            justify-content: initial;
+            background: #f5f5f5;
+            padding: 0;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 2rem 1rem; background: transparent; box-shadow: none; border-radius: 0; }
+        .section { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; }
+        .section h2 { margin-top: 0; border-bottom: 2px solid #007bff; padding-bottom: 0.5rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f8f9fa; font-weight: bold; }
+        .badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.875rem; font-weight: bold; }
+        .badge-admin { background: #dc3545; color: white; }
+        .badge-manager { background: #ffc107; color: black; }
+        .badge-user { background: #28a745; color: white; }
+        .badge-viewer { background: #6c757d; color: white; }
+        .btn { padding: 0.4rem 0.75rem; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; font-size: 0.8rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-primary:hover { background: #0056b3; }
+        .btn-danger { background: transparent; color: #dc3545; border: 1px solid #dc3545; }
+        .btn-danger:hover { background: #dc3545; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .action-buttons { display: flex; gap: 0.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.25rem; font-weight: bold; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; }
+        .form-inline { display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; }
+        .form-inline .form-group { flex: 1; min-width: 150px; }
+        .back-link { margin-bottom: 1rem; display: inline-block; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 2rem; border-radius: 8px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .modal-header h3 { margin: 0; }
+        .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+        /* Toast notifications */
+        .toast-container { position: fixed; top: 1rem; right: 1rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
+        .toast { padding: 0.75rem 1rem; border-radius: 6px; color: white; font-size: 0.875rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: slideIn 0.3s ease; max-width: 300px; }
+        .toast-success { background: #28a745; }
+        .toast-error { background: #dc3545; }
+        .toast-info { background: #17a2b8; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div id="toast-container" class="toast-container"></div>
+    <div class="container">
+        <a href="#" id="back-link" class="back-link">← Back to Organization</a>
+        <h1>Groups Management</h1>
+        <p id="org-name"></p>
+
+        <!-- Create Group Section -->
+        <div class="section">
+            <h2>Create New Group</h2>
+            <form id="create-group-form" class="form-inline">
+                <div class="form-group">
+                    <label for="group-name">Name</label>
+                    <input type="text" id="group-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="group-permission">Permission Level</label>
+                    <select id="group-permission" name="permission">
+                        <option value="Viewer">Viewer</option>
+                        <option value="User" selected>User</option>
+                        <option value="Manager">Manager</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Create Group</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Groups List -->
+        <div class="section">
+            <h2>Groups</h2>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <input type="text" id="search-input" placeholder="Search groups..." style="flex: 1; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Permission</th>
+                        <th>Members</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="groups-list">
+                    <tr><td colspan="5">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Group Details Modal -->
+    <div id="group-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-group-name">Group</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            
+            <div class="section" style="margin-bottom: 1rem;">
+                <h4>Add Existing Member</h4>
+                <p style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Add someone who is already in this organization</p>
+                <form id="add-member-form" class="form-inline">
+                    <div class="form-group">
+                        <label for="member-select">Select Member</label>
+                        <select id="member-select" required>
+                            <option value="">-- Select a member --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Add to Group</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="section" style="margin-bottom: 1rem;">
+                <h4>Invite New User</h4>
+                <p style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Send an email invite to someone not yet in the system</p>
+                <form id="invite-form" class="form-inline">
+                    <div class="form-group">
+                        <label for="invite-email">Email</label>
+                        <input type="email" id="invite-email" placeholder="newuser@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Send Invite</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="section">
+                <h4>Members</h4>
+                <table>
+                    <thead>
+                        <tr><th>Name</th><th>Email</th><th>Admin</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="modal-members-list">
+                        <tr><td colspan="4">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.animation = 'slideOut 0.3s ease forwards'; setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        const pathParts = window.location.pathname.split('/');
+        const orgId = pathParts[2];
+        let currentGroupId = null;
+        let allGroups = [];
+        let searchTimeout = null;
+
+        document.getElementById('back-link').href = `/organizations/${orgId}/manage`;
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function loadOrgName() {
+            const response = await fetch(`/organizations/${orgId}`);
+            const org = await response.json();
+            document.getElementById('org-name').textContent = org.name;
+        }
+
+        async function loadGroups() {
+            const response = await fetch(`/organizations/${orgId}/groups/list`);
+            allGroups = await response.json();
+            
+            // Fetch member counts for each group
+            for (const group of allGroups) {
+                const usersResponse = await fetch(`/organizations/${orgId}/groups/${group.id}/users`);
+                const users = await usersResponse.json();
+                group.memberCount = users.length;
+            }
+            
+            filterAndRenderGroups();
+        }
+        
+        function filterAndRenderGroups() {
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allGroups.filter(g => 
+                g.name.toLowerCase().includes(searchQuery) || 
+                (g.description && g.description.toLowerCase().includes(searchQuery))
+            );
+            renderGroups(filtered);
+        }
+        
+        function renderGroups(groups) {
+            const tbody = document.getElementById('groups-list');
+            tbody.innerHTML = '';
+
+            if (groups.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">No groups found</td></tr>';
+                return;
+            }
+
+            for (const group of groups) {
+                const row = document.createElement('tr');
+                const isAdmin = group.is_admin_group;
+                row.innerHTML = `
+                    <td>${escapeHtml(group.name)}${isAdmin ? ' <small style="color:#666">(System)</small>' : ''}</td>
+                    <td>${escapeHtml(group.description || '-')}</td>
+                    <td><span class="badge badge-${group.permission.toLowerCase()}">${group.permission}</span></td>
+                    <td>${group.memberCount || 0}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="openGroupModal('${group.id}', '${escapeHtml(group.name)}')">Manage</button>
+                            ${!isAdmin ? `<button class="btn btn-danger" onclick="deleteGroup('${group.id}')">Delete</button>` : ''}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            }
+        }
+        
+        // Search with debounce
+        document.getElementById('search-input').addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(filterAndRenderGroups, 200);
+        });
+
+        let orgMembers = [];
+
+        async function loadOrgMembers() {
+            const response = await fetch(`/organizations/${orgId}/members`);
+            orgMembers = await response.json();
+        }
+
+        async function openGroupModal(groupId, groupName) {
+            currentGroupId = groupId;
+            document.getElementById('modal-group-name').textContent = groupName;
+            document.getElementById('group-modal').classList.add('active');
+            await loadGroupMembers();
+            await updateMemberDropdown();
+        }
+
+        async function updateMemberDropdown() {
+            const select = document.getElementById('member-select');
+            const groupUsersResponse = await fetch(`/organizations/${orgId}/groups/${currentGroupId}/users`);
+            const groupUsers = await groupUsersResponse.json();
+            const groupUserIds = new Set(groupUsers.map(u => u.id));
+
+            select.innerHTML = '<option value="">-- Select a member --</option>';
+            
+            for (const member of orgMembers) {
+                if (!groupUserIds.has(member.user_id)) {
+                    const option = document.createElement('option');
+                    option.value = member.user_id;
+                    option.textContent = `${member.user?.name || 'Unknown'} (${member.user?.email || ''})`;
+                    select.appendChild(option);
+                }
+            }
+
+            if (select.options.length === 1) {
+                select.innerHTML = '<option value="">-- All members already in group --</option>';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('group-modal').classList.remove('active');
+            currentGroupId = null;
+        }
+
+        async function loadGroupMembers() {
+            const response = await fetch(`/organizations/${orgId}/groups/${currentGroupId}/users`);
+            const users = await response.json();
+            const tbody = document.getElementById('modal-members-list');
+            tbody.innerHTML = '';
+
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">No members</td></tr>';
+                return;
+            }
+
+            for (const user of users) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>-</td>
+                    <td><button class="btn btn-danger" onclick="removeMember('${user.id}')">Remove</button></td>
+                `;
+                tbody.appendChild(row);
+            }
+        }
+
+        document.getElementById('create-group-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('group-name').value,
+                permission: document.getElementById('group-permission').value
+            };
+
+            const response = await fetch(`/organizations/${orgId}/groups`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                e.target.reset();
+                loadGroups();
+                showToast('Group created!', 'success');
+            } else {
+                const error = await response.json();
+                showToast(error.error || 'Failed to create group', 'error');
+            }
+        });
+
+        document.getElementById('add-member-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = document.getElementById('member-select').value;
+            if (!userId) return;
+
+            const response = await fetch(`/organizations/${orgId}/groups/${currentGroupId}/users`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId })
+            });
+
+            if (response.ok) {
+                await loadGroupMembers();
+                await updateMemberDropdown();
+                await loadGroups();
+                showToast('Member added!', 'success');
+            } else {
+                const error = await response.json();
+                showToast(error.error || 'Failed to add member', 'error');
+            }
+        });
+
+        document.getElementById('invite-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('invite-email').value;
+
+            const response = await fetch(`/organizations/${orgId}/groups/${currentGroupId}/invites`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+
+            if (response.ok) {
+                document.getElementById('invite-email').value = '';
+                showToast('Invite sent!', 'success');
+            } else {
+                const error = await response.json();
+                showToast(error.error || 'Failed to send invite', 'error');
+            }
+        });
+
+        async function deleteGroup(groupId) {
+            if (!confirm('Delete this group?')) return;
+            const response = await fetch(`/organizations/${orgId}/groups/${groupId}`, { method: 'DELETE' });
+            if (response.ok) { loadGroups(); showToast('Group deleted', 'success'); }
+            else showToast('Failed to delete group', 'error');
+        }
+
+        async function removeMember(userId) {
+            if (!confirm('Remove this member?')) return;
+            const response = await fetch(`/organizations/${orgId}/groups/${currentGroupId}/users/${userId}`, { method: 'DELETE' });
+            if (response.ok) { loadGroupMembers(); loadGroups(); showToast('Member removed', 'success'); }
+            else showToast('Failed to remove member', 'error');
+        }
+
+        // Close modal on outside click
+        document.getElementById('group-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'group-modal') closeModal();
+        });
+
+        loadOrgName();
+        loadGroups();
+        loadOrgMembers();
+    </script>
+</body>
+</html>

@@ -25,8 +25,8 @@ describe App::Welcome do
   it "should show guest page when not logged in" do
     result = client.get("/")
     result.status_code.should eq 200
-    result.body.should contain("You're being trampled by Spider-Gazelle!")
-    result.body.should contain("Please sign in to continue")
+    result.body.should contain("Spider-Gazelle Multitenancy Starter")
+    result.body.should contain("Production-ready template")
     result.body.should contain("/auth/login")
   end
 

@@ -67,6 +67,7 @@ class App::Auth < App::Base
     location = if user && user.verify_password(password)
                  session["user_id"] = user.id.to_s
                  session["user_name"] = user.name
+                 audit_log(Models::AuditLog::Actions::LOGIN, Models::AuditLog::Resources::USER, user.id)
                  "/"
                else
                  "/auth/login?error=Invalid+email+or+password"
@@ -140,6 +141,9 @@ class App::Auth < App::Base
     @[AC::Param::Info(description: "Also logout from OAuth provider")]
     provider : String? = nil,
   )
+    if user = current_user
+      audit_log(Models::AuditLog::Actions::LOGOUT, Models::AuditLog::Resources::USER, user.id)
+    end
     session.delete("user_id")
     session.delete("user_name")
     session.delete("auth_provider")
@@ -159,6 +163,106 @@ class App::Auth < App::Base
     else
       redirect_to "/auth/login", status: :see_other
     end
+  end
+
+  # Show forgot password page
+  @[AC::Route::GET("/forgot-password")]
+  def forgot_password
+    html = File.read("views/forgot_password.html")
+    render html: html
+  end
+
+  # Handle forgot password request
+  @[AC::Route::POST("/forgot-password")]
+  def forgot_password_post(
+    @[AC::Param::Info(description: "User email", example: "user@example.com")]
+    email : String,
+  )
+    user = Models::User.where(email: email.strip.downcase).first?
+
+    if user
+      # Create password reset token
+      reset_token, token_string = Models::PasswordResetToken.create_for_user(user)
+
+      # Send email
+      begin
+        Services::EmailService.send_password_reset(user, token_string)
+      rescue ex
+        Log.error(exception: ex) { "Failed to send password reset email" }
+        redirect_to "/auth/forgot-password?error=Failed+to+send+email", status: :see_other
+        return
+      end
+    end
+
+    # Always show success message (security: don't reveal if email exists)
+    redirect_to "/auth/forgot-password?success=true", status: :see_other
+  end
+
+  # Show reset password page
+  @[AC::Route::GET("/reset-password")]
+  def reset_password(
+    @[AC::Param::Info(description: "Password reset token")]
+    token : String,
+  )
+    # Verify token exists and is valid
+    reset_token = Models::PasswordResetToken.find_by_token(token)
+
+    if reset_token.nil? || !reset_token.valid?
+      html = File.read("views/reset_password.html")
+      error_html = %(<div class="error">Invalid or expired reset link</div>)
+      html = html.sub("<div id=\"error-message\"></div>", error_html)
+      render html: html
+      return
+    end
+
+    html = File.read("views/reset_password.html")
+    html = html.sub("{{TOKEN}}", HTML.escape(token))
+    render html: html
+  end
+
+  # Handle password reset
+  @[AC::Route::POST("/reset-password")]
+  def reset_password_post(
+    @[AC::Param::Info(description: "Password reset token")]
+    token : String,
+    @[AC::Param::Info(description: "New password")]
+    password : String,
+    @[AC::Param::Info(description: "Password confirmation")]
+    password_confirmation : String,
+  )
+    # Validate passwords match
+    if password != password_confirmation
+      redirect_to "/auth/reset-password?token=#{token}&error=Passwords+do+not+match", status: :see_other
+      return
+    end
+
+    # Validate password length
+    if password.size < 8
+      redirect_to "/auth/reset-password?token=#{token}&error=Password+must+be+at+least+8+characters", status: :see_other
+      return
+    end
+
+    # Find and validate token
+    reset_token = Models::PasswordResetToken.find_by_token(token)
+
+    if reset_token.nil? || !reset_token.valid?
+      redirect_to "/auth/reset-password?token=#{token}&error=Invalid+or+expired+reset+link", status: :see_other
+      return
+    end
+
+    # Update user password
+    user = reset_token.user
+    user.password = password
+    user.save!
+
+    # Mark token as used
+    reset_token.mark_as_used!
+
+    # Log the user in
+    session["user_id"] = user.id.to_s
+    session["user_name"] = user.name
+
+    redirect_to "/?message=Password+reset+successful", status: :see_other
   end
 
   private def logout_redirect_uri
