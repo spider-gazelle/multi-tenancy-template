@@ -182,11 +182,11 @@ class App::Auth < App::Base
 
     if user
       # Create password reset token
-      token = Models::PasswordResetToken.create_for_user(user)
+      reset_token, token_string = Models::PasswordResetToken.create_for_user(user)
 
       # Send email
       begin
-        Services::EmailService.send_password_reset(user, token.token)
+        Services::EmailService.send_password_reset(user, token_string)
       rescue ex
         Log.error(exception: ex) { "Failed to send password reset email" }
         redirect_to "/auth/forgot-password?error=Failed+to+send+email", status: :see_other
@@ -205,7 +205,7 @@ class App::Auth < App::Base
     token : String,
   )
     # Verify token exists and is valid
-    reset_token = Models::PasswordResetToken.find?(token)
+    reset_token = Models::PasswordResetToken.find_by_token(token)
 
     if reset_token.nil? || !reset_token.valid?
       html = File.read("views/reset_password.html")
@@ -243,7 +243,7 @@ class App::Auth < App::Base
     end
 
     # Find and validate token
-    reset_token = Models::PasswordResetToken.find?(token)
+    reset_token = Models::PasswordResetToken.find_by_token(token)
 
     if reset_token.nil? || !reset_token.valid?
       redirect_to "/auth/reset-password?token=#{token}&error=Invalid+or+expired+reset+link", status: :see_other

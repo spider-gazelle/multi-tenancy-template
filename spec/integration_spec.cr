@@ -86,13 +86,13 @@ describe "End-to-End Integration" do
       user.save!
 
       # Step 2: Create password reset token
-      reset_token = App::Models::PasswordResetToken.create_for_user(user)
+      reset_token, token_string = App::Models::PasswordResetToken.create_for_user(user)
       reset_token.persisted?.should be_true
-      reset_token.token.should_not be_empty
+      token_string.should_not be_empty
       reset_token.valid?.should be_true
 
-      # Step 3: Verify token can be found
-      found_token = App::Models::PasswordResetToken.find?(reset_token.token)
+      # Step 3: Verify token can be found by the full token string
+      found_token = App::Models::PasswordResetToken.find_by_token(token_string)
       found_token.should_not be_nil
       found_token.not_nil!.user_id.should eq(user.id)
 
@@ -105,7 +105,7 @@ describe "End-to-End Integration" do
       user.verify_password("old_password").should be_false
 
       # Step 6: Verify token validity check works
-      reset_token.valid?.should be_true # Still valid (not used, not expired)
+      found_token.not_nil!.valid?.should be_true # Still valid (not used, not expired)
     end
   end
 
