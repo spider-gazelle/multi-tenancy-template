@@ -5,7 +5,7 @@ class App::Auth < App::Base
   base "/auth"
 
   # Configure OAuth providers
-  MultiAuth.config("google", ENV["GOOGLE_CLIENT_ID"]? || "", ENV["GOOGLE_CLIENT_SECRET"]? || "")
+  MultiAuth.config("google", App::GOOGLE_CLIENT_ID, App::GOOGLE_CLIENT_SECRET)
 
   # Configure Microsoft using GenericOAuth2
   MultiAuth.config("microsoft") do |redirect_uri, _provider_id|
@@ -14,13 +14,13 @@ class App::Auth < App::Base
     # Use 'common' for multi-tenant (personal + work accounts)
     # Use 'organizations' for work/school accounts only
     # Use 'consumers' for personal Microsoft accounts only
-    tenant = ENV["MICROSOFT_TENANT_ID"]? || "common"
+    tenant = App::MICROSOFT_TENANT_ID
 
     MultiAuth::Provider::GenericOAuth2.new(
       provider_name: "microsoft",
       redirect_uri: redirect_uri,
-      key: ENV["MICROSOFT_CLIENT_ID"]? || "",
-      secret: ENV["MICROSOFT_CLIENT_SECRET"]? || "",
+      key: App::MICROSOFT_CLIENT_ID,
+      secret: App::MICROSOFT_CLIENT_SECRET,
       site: "https://login.microsoftonline.com",
       authorize_url: "/#{tenant}/oauth2/v2.0/authorize",
       token_url: "/#{tenant}/oauth2/v2.0/token",
@@ -75,29 +75,29 @@ class App::Auth < App::Base
     redirect_to location, status: :see_other
   end
 
-  # Initiate OAuth flow
-  @[AC::Route::GET("/oauth/:provider")]
+  # Initiate OAuth flow with external providers (Google, Microsoft)
+  @[AC::Route::GET("/:provider")]
   def oauth_initiate(
     @[AC::Param::Info(description: "OAuth provider (google or microsoft)")]
     provider : String,
   )
     scheme = request.headers["X-Forwarded-Proto"]? || "http"
     host = request.headers["Host"]? || "localhost:3000"
-    redirect_uri = "#{scheme}://#{host}/auth/oauth/#{provider}/callback"
+    redirect_uri = "#{scheme}://#{host}/auth/#{provider}/callback"
     multi_auth = MultiAuth.make(provider, redirect_uri)
 
     redirect_to multi_auth.authorize_uri(scope: oauth_scope(provider)), status: :see_other
   end
 
   # OAuth callback handler
-  @[AC::Route::GET("/oauth/:provider/callback")]
+  @[AC::Route::GET("/:provider/callback")]
   def oauth_callback(
     @[AC::Param::Info(description: "OAuth provider (google or microsoft)")]
     provider : String,
   ) : String?
     scheme = request.headers["X-Forwarded-Proto"]? || "http"
     host = request.headers["Host"]? || "localhost:3000"
-    redirect_uri = "#{scheme}://#{host}/auth/oauth/#{provider}/callback"
+    redirect_uri = "#{scheme}://#{host}/auth/#{provider}/callback"
     multi_auth = MultiAuth.make(provider, redirect_uri)
 
     # Get user info from OAuth provider

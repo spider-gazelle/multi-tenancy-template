@@ -27,6 +27,10 @@ dependencies:
     github: arcage/crystal-email
     version: ~> 0.7.1
 
+ # Authly
+  authly:
+    github: place-labs/authly
+
 development_dependencies:
   ameba:
     github: veelenga/ameba

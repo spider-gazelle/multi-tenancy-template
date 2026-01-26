@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>OAuth Applications - Spider-Gazelle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    body {
+      display: block;
+      background: #f5f5f5;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px !important;
+      margin: 0 auto !important;
+      padding: 2rem 1rem !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    .header a {
+      text-decoration: none;
+      color: #007bff;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card h2 {
+      margin: 0 0 1rem 0;
+      font-size: 1.25rem;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.25;
+      box-sizing: border-box;
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      background: #007bff;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0056b3;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .app-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .app-item {
+      border: 1px solid #eee;
+      border-radius: 4px;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .app-info h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+    }
+
+    .app-meta {
+      font-size: 0.875rem;
+      color: #666;
+    }
+
+    .app-meta div {
+      margin-bottom: 0.25rem;
+    }
+
+    .code-block {
+      background: #f8f9fa;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 0.875rem;
+      word-break: break-all;
+    }
+
+    .toast-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 9999;
+    }
+
+    .toast {
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      color: white;
+      font-size: 0.875rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      animation: slideIn 0.3s ease;
+      margin-bottom: 0.5rem;
+    }
+
+    .toast-success {
+      background: #28a745;
+    }
+
+    .toast-error {
+      background: #dc3545;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .new-secret-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .secret-display {
+      background: #333;
+      color: #0f0;
+      padding: 1rem;
+      border-radius: 4px;
+      font-family: monospace;
+      margin: 1rem 0;
+      word-break: break-all;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #666;
+      padding: 2rem 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="container">
+    <div class="header">
+      <h1>OAuth Applications</h1>
+      <a href="/profile">Back to Profile</a>
+    </div>
+
+    <!-- Create Application Form -->
+    <div class="card">
+      <h2>Create New Application</h2>
+      <form id="create-app-form">
+        <div class="form-group">
+          <label for="name">Application Name</label>
+          <input type="text" id="name" name="name" required placeholder="My Awesome App">
+        </div>
+        <div class="form-group">
+          <label for="organization_id">Organization</label>
+          <select id="organization_id" name="organization_id" required
+            style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; background: white;">
+            <option value="">Select Organization...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="redirect_uris">Redirect URIs (comma separated)</label>
+          <input type="text" id="redirect_uris" name="redirect_uris" required placeholder="https://myapp.com/callback">
+        </div>
+
+        <div class="form-group">
+          <label>Grant Types</label>
+          <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem;">
+            <label style="display: flex; align-items: center; gap: 0.25rem; font-weight: normal;">
+              <input type="checkbox" name="grant_types" value="authorization_code" checked> Authorization Code
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.25rem; font-weight: normal;">
+              <input type="checkbox" name="grant_types" value="refresh_token" checked> Refresh Token
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.25rem; font-weight: normal;">
+              <input type="checkbox" name="grant_types" value="client_credentials" checked> Client Credentials
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.25rem; font-weight: normal;">
+              <input type="checkbox" name="grant_types" value="implicit"> Implicit
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="scopes">Scopes (comma separated)</label>
+          <input type="text" id="scopes" name="scopes" placeholder="user, admin (optional)">
+        </div>
+        <button type="submit" class="btn btn-primary">Create Application</button>
+      </form>
+    </div>
+
+    <script>
+      // Fetch organizations and populate dropdown
+      async function loadOrganizations() {
+        try {
+          const response = await fetch('/organizations/list');
+          const orgs = await response.json();
+          const select = document.getElementById('organization_id');
+
+          if (orgs.length === 0) {
+            const option = document.createElement('option');
+            option.text = "No organizations found";
+            select.add(option);
+            select.disabled = true;
+            return;
+          }
+
+          orgs.forEach(org => {
+            const option = document.createElement('option');
+            option.value = org.id;
+            option.text = org.name;
+            select.add(option);
+          });
+
+          // Select first one by default if only one
+          if (orgs.length === 1) {
+            select.value = orgs[0].id;
+          }
+        } catch (error) {
+          console.error('Failed to load organizations', error);
+        }
+      }
+
+      // Load organizations on page load
+      loadOrganizations();
+    </script>
+
+    <!-- Application List -->
+    <div class="card">
+      <h2>Your Applications</h2>
+      <div id="app-list" class="app-list">
+        <div class="empty-state">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Secret Modal -->
+  <div id="secret-modal" class="new-secret-modal">
+    <div class="modal-content">
+      <h2>Application Created</h2>
+      <p>Please copy your client secret now. You won't be able to see it again!</p>
+
+      <div class="form-group">
+        <label>Client ID</label>
+        <div id="new-client-id" class="code-block" style="background: #eee; color: #333;"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Client Secret</label>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <div id="new-client-secret" class="secret-display" style="margin: 0; flex: 1;"></div>
+          <button type="button" class="btn btn-primary btn-sm" onclick="copySecret()"
+            style="height: 100%;">Copy</button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="closeSecretModal()">I have copied the secret</button>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="new-secret-modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <h2>Delete Application</h2>
+      <p>Are you sure you want to delete this application? This action cannot be undone.</p>
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem;">
+        <button class="btn" style="background: #eee; color: #333;" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showToast(message, type) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast toast-' + type;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.innerText = text;
+      return div.innerHTML;
+    }
+
+    async function loadApplications() {
+      try {
+        const response = await fetch('/oauth/applications');
+        const apps = await response.json();
+        const container = document.getElementById('app-list');
+
+        if (apps.length === 0) {
+          container.innerHTML = '<div class="empty-state">No applications found. Create one above!</div>';
+          return;
+        }
+
+        container.innerHTML = apps.map(app => `
+          <div class="app-item" style="align-items: center;">
+            <div class="app-info" style="flex: 1;">
+              <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                ${escapeHtml(app.name)}
+                <span style="font-size: 0.75rem; font-weight: normal; color: #666; background: #eee; padding: 0.1rem 0.4rem; border-radius: 99px;">${app.id}</span>
+              </h3>
+              <div class="app-meta" style="color: #666; font-size: 0.9rem;">
+                <div style="margin-bottom: 0.25rem;">
+                  <strong>Redirect URIs:</strong> ${app.redirect_uris.map(uri => escapeHtml(uri)).join(', ')}
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="deleteApp('${app.id}')" title="Delete Application" style="padding: 0.4rem; line-height: 0; min-height: auto; width: auto; flex-shrink: 0;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        `).join('');
+      } catch (error) {
+        showToast('Failed to load applications', 'error');
+      }
+    }
+
+    document.getElementById('create-app-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+
+      const grantTypes = Array.from(document.querySelectorAll('input[name="grant_types"]:checked'))
+        .map(cb => cb.value);
+
+      const data = {
+        name: formData.get('name'),
+        organization_id: formData.get('organization_id'),
+        redirect_uris: formData.get('redirect_uris').split(',').map(u => u.trim()).filter(u => u),
+        scopes: formData.get('scopes').split(',').map(s => s.trim()).filter(s => s),
+        grant_types: grantTypes.length > 0 ? grantTypes : ["client_credentials", "authorization_code", "refresh_token"],
+      };
+
+      try {
+        const response = await fetch('/oauth/applications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error('Failed to create');
+
+        const result = await response.json();
+
+        // Show secret modal
+        document.getElementById('new-client-id').textContent = result.id;
+        document.getElementById('new-client-secret').textContent = result.client_secret;
+        document.getElementById('secret-modal').style.display = 'flex';
+
+        e.target.reset();
+        loadApplications();
+      } catch (error) {
+        showToast('Error creating application', 'error');
+      }
+    });
+
+    let pendingDeleteId = null;
+
+    function deleteApp(id) {
+      pendingDeleteId = id;
+      document.getElementById('delete-modal').style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('delete-modal').style.display = 'none';
+      pendingDeleteId = null;
+    }
+
+    document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
+      if (!pendingDeleteId) return;
+
+      const id = pendingDeleteId;
+      // Disable button to prevent double clicks
+      const btn = document.getElementById('confirm-delete-btn');
+      const originalText = btn.textContent;
+      btn.textContent = 'Deleting...';
+      btn.disabled = true;
+
+      try {
+        const response = await fetch('/oauth/applications/' + id, { method: 'DELETE' });
+        if (response.ok) {
+          showToast('Application deleted', 'success');
+          loadApplications();
+        } else {
+          showToast('Failed to delete application', 'error');
+        }
+      } catch (error) {
+        showToast('Error deleting application', 'error');
+      } finally {
+        closeDeleteModal();
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }
+    });
+
+    function closeSecretModal() {
+      document.getElementById('secret-modal').style.display = 'none';
+      document.getElementById('new-client-id').textContent = '';
+      document.getElementById('new-client-secret').textContent = '';
+    }
+
+    function copySecret() {
+      const secret = document.getElementById('new-client-secret').textContent;
+      if (!secret) return;
+
+      navigator.clipboard.writeText(secret).then(() => {
+        showToast('Secret copied to clipboard', 'success');
+      }).catch(() => {
+        // Fallback
+        const textarea = document.createElement('textarea');
+        textarea.value = secret;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('Secret copied to clipboard', 'success');
+      });
+    }
+
+    // Initial load
+    loadApplications();
+  </script>
+</body>
+
+</html>

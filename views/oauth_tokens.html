@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Authorized Applications - Spider-Gazelle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            display: block;
+            background: #f5f5f5;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px !important;
+            margin: 0 auto !important;
+            padding: 2rem 1rem !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .header a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .token-item {
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .token-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .token-info {
+            flex: 1;
+        }
+
+        .token-info h3 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .token-meta {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 2rem 0;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+        }
+
+        .toast {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .toast-success {
+            background: #28a745;
+        }
+
+        .toast-error {
+            background: #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="toast-container" class="toast-container"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Authorized Applications</h1>
+            <a href="/profile">Back to Profile</a>
+        </div>
+
+        <div class="card">
+            <div id="token-list">
+                <div class="empty-state">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.innerText = text;
+            return div.innerHTML;
+        }
+
+        async function loadTokens() {
+            try {
+                const response = await fetch('/oauth/tokens');
+                const tokens = await response.json();
+                const container = document.getElementById('token-list');
+
+                // Group tokens by client_id to show unique apps, or just show list
+                // Since the API returns tokens, we might see multiple tokens for same app.
+                // For simplicity, let's just list distinct apps or show all tokens.
+                // Better: let's try to deduce app name from token info if available, or just show client_id.
+                // The API returns Models::OAuthToken which has client_id.
+
+                if (tokens.length === 0) {
+                    container.innerHTML = '<div class="empty-state">You have not authorized any applications.</div>';
+                    return;
+                }
+
+                container.innerHTML = tokens.map(token => `
+          <div class="token-item">
+            <div class="token-info">
+              <h3>App: ${escapeHtml(token.client_id)}</h3>
+              <div class="token-meta">
+                Created: ${new Date(token.created_at).toLocaleDateString()}<br>
+                Expires: ${new Date(token.expires_at).toLocaleDateString()}
+              </div>
+            </div>
+            <button class="btn-danger" onclick="revokeToken('${token.id}')">Revoke Access</button>
+          </div>
+        `).join('');
+            } catch (error) {
+                showToast('Failed to load authorized applications', 'error');
+            }
+        }
+
+        async function revokeToken(id) {
+            if (!confirm('Are you sure you want to revoke access for this application?')) return;
+
+            try {
+                const response = await fetch('/oauth/tokens/' + id + '/revoke', { method: 'POST' });
+                if (response.ok) {
+                    showToast('Access revoked', 'success');
+                    loadTokens();
+                } else {
+                    showToast('Failed to revoke access', 'error');
+                }
+            } catch (error) {
+                showToast('Error revoking access', 'error');
+            }
+        }
+
+        loadTokens();
+    </script>
+</body>
+
+</html>

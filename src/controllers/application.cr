@@ -1,4 +1,5 @@
 require "uuid"
+require "uuid/json"
 require "../error"
 require "../helpers/pagination"
 
@@ -15,14 +16,21 @@ abstract class App::Base < ActionController::Base
   @current_user : Models::User? = nil
   @current_organization : Models::Organization? = nil
   @current_api_key : Models::ApiKey? = nil
+  @current_jwt_user : Models::User? = nil
 
-  # Get current user from session or API key
+  # Get current user from session, API key, or JWT token
   def current_user : Models::User?
     return @current_user if @current_user
 
     # Try API key first (from Authorization header)
     if api_key = current_api_key
       @current_user = api_key.user
+      return @current_user
+    end
+
+    # Try JWT token (from Authorization header)
+    if jwt_user = current_jwt_user
+      @current_user = jwt_user
       return @current_user
     end
 
@@ -48,6 +56,86 @@ abstract class App::Base < ActionController::Base
     end
 
     @current_api_key
+  end
+
+  # Get current user from JWT token
+  private def current_jwt_user : Models::User?
+    return @current_jwt_user if @current_jwt_user
+
+    auth_header = request.headers["Authorization"]?
+    return nil unless auth_header
+    return nil if auth_header.starts_with?("Bearer sk_")
+
+    token = auth_header.sub(/^Bearer\s+/i, "")
+    return nil if token.empty?
+
+    begin
+      Log.debug { "Attempting to decode JWT token (length: #{token.size}, dots: #{token.count('.')})" }
+
+      # Decode and verify JWT token
+      payload, _ = Authly.jwt_decode(token)
+
+      # Check if token is revoked (using jti claim)
+      if jti = payload["jti"]?
+        jti_str = jti.as_s? || jti.to_s
+        # Check revocation directly in token store, not through Authly.revoked?
+        # because Authly.revoked? expects the full JWT token, not the jti
+        store = Authly.config.token_store
+        if store.is_a?(App::AuthlyTokenStore)
+          return nil if store.revoked?(jti_str)
+        end
+      end
+
+      # Extract user ID from sub claim (already a UUID string)
+      sub_claim = payload["sub"]?
+      return nil unless sub_claim
+
+      user_id_str = sub_claim.as_s? || sub_claim.to_s
+      return nil if user_id_str.empty?
+
+      Log.debug { "JWT decoded successfully, user_id: #{user_id_str}" }
+
+      # Find and return user
+      @current_jwt_user = Models::User.find?(UUID.new(user_id_str))
+    rescue ex
+      Log.warn(exception: ex) { "Error decoding JWT token" }
+      nil
+    end
+  end
+
+  # Get JWT token scopes (if authenticated via JWT)
+  # Returns array of scopes from JWT token, or empty array
+  def jwt_scopes : Array(String)
+    return [] of String unless current_jwt_user
+
+    auth_header = request.headers["Authorization"]?
+    return [] of String unless auth_header
+
+    token = auth_header.sub(/^Bearer\s+/i, "")
+    return [] of String if token.empty?
+
+    begin
+      payload, _ = Authly.jwt_decode(token)
+
+      # Handle scope as array (standard OAuth2 JWT format)
+      if scope_claim = payload["scope"]?
+        if scope_claim.as_a?
+          return scope_claim.as_a.map(&.as_s)
+        elsif scope_claim.as_s?
+          # Fallback: handle legacy string format
+          return scope_claim.as_s.split(" ")
+        end
+      end
+    rescue
+      # Ignore errors, return empty array
+    end
+
+    [] of String
+  end
+
+  # Check if JWT token has a specific scope
+  def jwt_has_scope?(scope : String) : Bool
+    jwt_scopes.includes?(scope)
   end
 
   # Check if request is authenticated via API key
@@ -83,6 +171,11 @@ abstract class App::Base < ActionController::Base
   def user_permission_in_org(org : Models::Organization) : Permissions?
     return nil unless user = current_user
 
+    # For JWT authentication, check if scopes grant organization-level permissions
+    if current_jwt_user && (jwt_permission = jwt_permission_for_org(org))
+      return jwt_permission
+    end
+
     # Check direct organization membership first (for backward compatibility)
     org_user = Models::OrganizationUser.find?({user.id, org.id})
     direct_permission = org_user.try(&.permission)
@@ -98,6 +191,49 @@ abstract class App::Base < ActionController::Base
     return nil if all_permissions.empty?
 
     all_permissions.min_by(&.value)
+  end
+
+  # Map JWT scopes to organization permissions
+  # This allows OAuth2 clients to have scoped access to organizations
+  private def jwt_permission_for_org(org : Models::Organization) : Permissions?
+    scopes = jwt_scopes
+    return nil if scopes.empty?
+
+    # Check for organization-specific scopes first
+    # Format: "org:{org_id}:admin", "org:{org_id}:manager", etc.
+    org_prefix = "org:#{org.id}:"
+
+    if scopes.any? { |s| s == "#{org_prefix}admin" }
+      return Permissions::Admin
+    elsif scopes.any? { |s| s == "#{org_prefix}manager" }
+      return Permissions::Manager
+    elsif scopes.any? { |s| s == "#{org_prefix}user" }
+      return Permissions::User
+    elsif scopes.any? { |s| s == "#{org_prefix}viewer" }
+      return Permissions::Viewer
+    end
+
+    # Check for global permission scopes
+    # These grant the same permission across all organizations the user has access to
+    if scopes.includes?("admin")
+      return Permissions::Admin
+    elsif scopes.includes?("manager")
+      return Permissions::Manager
+    elsif scopes.includes?("user")
+      return Permissions::User
+    elsif scopes.includes?("viewer")
+      return Permissions::Viewer
+    end
+
+    # Check for resource-specific scopes that imply permissions
+    # e.g., "organizations.write" implies Manager, "organizations.read" implies Viewer
+    if scopes.includes?("organizations.write") || scopes.includes?("organizations.admin")
+      return Permissions::Manager
+    elsif scopes.includes?("organizations.read")
+      return Permissions::Viewer
+    end
+
+    nil
   end
 
   # Check if user has at least the specified permission level
@@ -178,7 +314,7 @@ abstract class App::Base < ActionController::Base
 
   getter! search_params : Hash(String, String | UInt32 | Array(String))
 
-  @[AC::Route::Filter(:before_action, only: [:index], converters: {fields: ConvertStringArray})]
+  @[AC::Route::Filter(:before_action, only: [:index, :by_application], converters: {fields: ConvertStringArray})]
   def build_search_params(
     @[AC::Param::Info(name: "q", description: "Search query for full-text search")]
     query : String = "*",
@@ -239,6 +375,13 @@ abstract class App::Base < ActionController::Base
   @[AC::Route::Exception(Error::Forbidden, status_code: HTTP::Status::FORBIDDEN)]
   def resource_access_forbidden(error) : Nil
     Log.debug { error.inspect_with_backtrace }
+  end
+
+  # 400 if bad request
+  @[AC::Route::Exception(Error::BadRequest, status_code: HTTP::Status::BAD_REQUEST)]
+  def bad_request(error) : CommonError
+    Log.debug { error.message }
+    CommonError.new(error, false)
   end
 
   # 404 if resource not present

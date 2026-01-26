@@ -1,5 +1,5 @@
 require "spec"
-
+require "uuid/json"
 # Helper methods for testing controllers (curl, with_server, context)
 require "action-controller/spec_helper"
 
@@ -50,6 +50,8 @@ end
 
 # Clean up before each test
 Spec.before_each do
+  App::Models::OAuthToken.clear
+  App::Models::OAuthClient.clear
   App::Models::AuditLog.clear
   App::Models::ApiKey.clear
   App::Models::PasswordResetToken.clear

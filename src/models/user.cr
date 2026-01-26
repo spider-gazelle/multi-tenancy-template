@@ -7,6 +7,8 @@ class App::Models::User < ::PgORM::Base
   attribute name : String
   attribute email : String
   attribute password_hash : String?
+  attribute support : Bool = false
+  attribute sys_admin : Bool = false
 
   include PgORM::Timestamps
 
@@ -44,5 +46,20 @@ class App::Models::User < ::PgORM::Base
   def verify_password(password : String) : Bool
     return false unless hash = password_hash
     Crypto::Bcrypt::Password.new(hash).verify(password)
+  end
+
+  # Check if user is a system administrator
+  def sys_admin? : Bool
+    sys_admin
+  end
+
+  # Check if user is support staff
+  def support? : Bool
+    support
+  end
+
+  # Check if user has any global admin privileges
+  def global_admin? : Bool
+    sys_admin? || support?
   end
 end
