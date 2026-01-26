@@ -13,6 +13,9 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
-
-      - name: Run specs via docker compose
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1
+      - name: Install dependencies
+        run: shards install
+      - name: Run specs
         run: ./test
