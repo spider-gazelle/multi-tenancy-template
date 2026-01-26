@@ -37,6 +37,7 @@ The template includes ready-to-use web pages:
 - `/organizations` - Organizations list and creation
 - `/organizations/:id/manage` - Organization member management
 - `/organizations/:id/groups` - Groups management
+- `/organizations/lookup?subdomain={name}` - Resolve subdomain to Organization ID (Public API)
 
 ## Authentication
 

@@ -368,7 +368,7 @@ config.trusted_ca_certificates = [
 
 ```sql
 CREATE TABLE oauth_clients (
-    id VARCHAR(255) PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
     name VARCHAR(255) NOT NULL,
     secret_hash VARCHAR(255),
     redirect_uris TEXT[] NOT NULL DEFAULT '{}',
@@ -390,7 +390,7 @@ CREATE TABLE oauth_tokens (
     token TEXT NOT NULL UNIQUE,
     token_type VARCHAR(50) NOT NULL,
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    client_id VARCHAR(255) REFERENCES oauth_clients(id) ON DELETE CASCADE,
+    client_id UUID REFERENCES oauth_clients(id) ON DELETE CASCADE,
     scopes TEXT[] NOT NULL DEFAULT '{}',
     expires_at TIMESTAMP NOT NULL,
     revoked_at TIMESTAMP,
