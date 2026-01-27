@@ -26,6 +26,21 @@ module App
 
   PG_DATABASE_URL = ENV["PG_DATABASE_URL"]
 
+  # JWT/OAuth2 Configuration
+  JWT_SECRET = ENV["JWT_SECRET"]? || raise "JWT_SECRET environment variable required for OAuth2/OIDC"
+  JWT_ISSUER = ENV["JWT_ISSUER"]? || NAME
+
+  # Application URLs
+  APP_BASE_URL = ENV["APP_BASE_URL"]? || "http://localhost:3000"
+
+  # OAuth Provider Credentials
+  GOOGLE_CLIENT_ID     = ENV["GOOGLE_CLIENT_ID"]? || ""
+  GOOGLE_CLIENT_SECRET = ENV["GOOGLE_CLIENT_SECRET"]? || ""
+
+  MICROSOFT_CLIENT_ID     = ENV["MICROSOFT_CLIENT_ID"]? || ""
+  MICROSOFT_CLIENT_SECRET = ENV["MICROSOFT_CLIENT_SECRET"]? || ""
+  MICROSOFT_TENANT_ID     = ENV["MICROSOFT_TENANT_ID"]? || "common"
+
   def self.running_in_production?
     IS_PRODUCTION
   end

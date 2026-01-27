@@ -4,12 +4,12 @@ class App::Organizations < App::Base
   # Filters
   ###############################################################################################
 
-  @[AC::Route::Filter(:before_action)]
+  @[AC::Route::Filter(:before_action, except: [:lookup])]
   private def authenticate
     require_auth!
   end
 
-  @[AC::Route::Filter(:before_action, except: [:index, :index_html, :create, :accept_invite])]
+  @[AC::Route::Filter(:before_action, except: [:index, :index_html, :create, :accept_invite, :lookup])]
   private def find_organization(id : String)
     @current_org = Models::Organization.find!(UUID.new(id))
     current_organization = @current_org
@@ -17,7 +17,7 @@ class App::Organizations < App::Base
 
   getter! current_org : Models::Organization
 
-  @[AC::Route::Filter(:before_action, except: [:index, :index_html, :create, :accept_invite])]
+  @[AC::Route::Filter(:before_action, except: [:index, :index_html, :create, :accept_invite, :lookup])]
   private def require_org_access
     require_organization_access!(current_org)
   end
@@ -149,6 +149,27 @@ class App::Organizations < App::Base
   @[AC::Route::POST("/:id/switch")]
   def switch : NamedTuple(message: String, organization: Models::Organization)
     {message: "Switched to organization", organization: current_org}
+  end
+
+  record LookupResponse, id : UUID, name : String, subdomain : String? do
+    include JSON::Serializable
+  end
+
+  # Resolve subdomain to Organization ID (Public)
+  @[AC::Route::GET("/lookup")]
+  def lookup(
+    @[AC::Param::Info(description: "Subdomain to lookup")]
+    subdomain : String,
+  ) : LookupResponse
+    # Find organization by subdomain
+    org = Models::Organization.find_by?(subdomain: subdomain)
+    raise Error::NotFound.new("Organization not found") unless org
+
+    LookupResponse.new(
+      id: org.id,
+      name: org.name,
+      subdomain: org.subdomain,
+    )
   end
 
   # List organization members

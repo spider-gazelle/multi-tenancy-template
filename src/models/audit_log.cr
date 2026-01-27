@@ -34,13 +34,15 @@ class App::Models::AuditLog < ::PgORM::Base
 
   # Resource type constants
   module Resources
-    USER         = "user"
-    ORGANIZATION = "organization"
-    GROUP        = "group"
-    DOMAIN       = "domain"
-    MEMBER       = "member"
-    INVITE       = "invite"
-    API_KEY      = "api_key"
+    USER              = "user"
+    ORGANIZATION      = "organization"
+    GROUP             = "group"
+    DOMAIN            = "domain"
+    MEMBER            = "member"
+    INVITE            = "invite"
+    API_KEY           = "api_key"
+    OAUTH_APPLICATION = "oauth_application"
+    OAUTH_TOKEN       = "oauth_token"
   end
 
   def self.log(

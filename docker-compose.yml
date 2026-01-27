@@ -11,12 +11,14 @@ services:
       - ${PWD}/.ameba.yml:/app/.ameba.yml
       - ${PWD}/views:/app/views
       - ${PWD}/www:/app/www
-      # - ${PWD}/.env.example:/app/.env
     depends_on:
       - postgres
     environment:
       GITHUB_ACTION: ${GITHUB_ACTION:-}
       PG_DATABASE_URL: postgresql://postgres:password@postgres:5432/development
+      JWT_SECRET: dev-secret-key-change-in-production-use-openssl-rand-hex-32
+      JWT_ISSUER: PlaceOS
+      APP_BASE_URL: http://localhost:3000
     working_dir: /app
     entrypoint: ["crystal", "spec", "-v", "--error-trace"]
 

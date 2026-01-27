@@ -10,10 +10,12 @@ Production-ready Spider-Gazelle template with PostgreSQL, multi-tenant organizat
 - Multi-tenant organizations with permissions (Admin, Manager, User, Viewer)
 - User groups with group-based permissions
 - Authentication: username/password, Google OAuth, Microsoft OAuth
+- OAuth2/OIDC server (authorization server for other applications)
 - OAuth token storage and refresh
 - Organization and group invites with email notifications
 - Password reset via email
 - Domain mapping
+- API key authentication
 - Docker support
 
 ## Quick Start
@@ -35,6 +37,7 @@ The template includes ready-to-use web pages:
 - `/organizations` - Organizations list and creation
 - `/organizations/:id/manage` - Organization member management
 - `/organizations/:id/groups` - Groups management
+- `/organizations/lookup?subdomain={name}` - Resolve subdomain to Organization ID (Public API)
 
 ## Authentication
 
@@ -48,19 +51,72 @@ user.save!
 
 Or use `crystal run create_test_user.cr`
 
-### OAuth Setup
+### OAuth Setup (Login with Google/Microsoft)
 
 **Google:**
 
 1. Create OAuth credentials at [Google Cloud Console](https://console.developers.google.com)
-2. Add redirect URI: `http://localhost:3000/auth/oauth/google/callback`
+2. Add redirect URI: `http://localhost:3000/auth/google/callback`
 3. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `.env`
 
 **Microsoft:**
 
 1. Register app at [Azure Portal](https://portal.azure.com)
-2. Add redirect URI: `http://localhost:3000/auth/oauth/microsoft/callback`
+2. Add redirect URI: `http://localhost:3000/auth/microsoft/callback`
 3. Set `MICROSOFT_CLIENT_ID` and `MICROSOFT_CLIENT_SECRET` in `.env`
+
+## OAuth2/OIDC Server
+
+This application can act as an OAuth2 authorization server for other applications. JWT tokens include user metadata and organization roles for fine-grained access control.
+
+**Quick Start:**
+
+1. Set `JWT_SECRET` and `JWT_ISSUER` in `.env`
+2. Create an OAuth client:
+
+```crystal
+client = Models::OAuthClient.new(
+  id: "my-app",
+  name: "My Application",
+  redirect_uris: ["https://myapp.com/callback"],
+  scopes: ["read", "write", "org:abc123:manager"],
+  grant_types: ["authorization_code", "refresh_token"]
+)
+client.secret = "client-secret"
+client.save!
+```
+
+3. Applications can now authenticate users via:
+   - Authorization endpoint: `GET /auth/oauth/authorize`
+   - Token endpoint: `POST /auth/oauth/token`
+   - UserInfo endpoint: `GET /auth/oauth/userinfo`
+   - Introspection: `POST /auth/introspect`
+   - Revocation: `POST /auth/revoke`
+
+**Supported Grant Types:** Authorization Code (with PKCE), Client Credentials, Password, Refresh Token, Device Authorization
+
+**JWT Token Structure:**
+
+Tokens include standard OAuth2 claims plus user metadata:
+
+```json
+{
+  "iss": "PlaceOS",
+  "sub": "user-uuid",
+  "aud": "client-id",
+  "scope": ["read", "write"],
+  "u": {
+    "n": "User Name",
+    "e": "user@example.com",
+    "p": 0,
+    "r": ["org:abc123:admin", "group:xyz789"]
+  }
+}
+```
+
+The `u.r` array contains organization permissions (`org:{id}:{level}`) and group memberships (`group:{id}`).
+
+See [guides/OAUTH2_SETUP.md](guides/OAUTH2_SETUP.md) for detailed setup.
 
 ## API Documentation
 
@@ -100,12 +156,28 @@ class MyController < App::Base
 end
 ```
 
-## Permission Levels
+## Permissions
+
+### Permission Levels
 
 - **Admin** - Full control
 - **Manager** - Manage members and resources
 - **User** - Create and manage own resources
 - **Viewer** - Read-only access
+
+### Unified Permission System
+
+Permissions work consistently across all authentication methods (session, OAuth, JWT tokens). The same `has_permission?()` and `require_permission!()` checks work regardless of how the user authenticated.
+
+**JWT Scope Mapping:**
+
+JWT tokens can grant permissions via scopes:
+
+- Organization-specific: `org:{org_id}:admin`, `org:{org_id}:manager`, etc.
+- Global: `admin`, `manager`, `user`, `viewer` (applies to all user's orgs)
+- Resource-based: `organizations.write` → Manager, `organizations.read` → Viewer
+
+**Example JWT scope:** `["read", "write", "org:abc123:manager"]` grants Manager permission in organization `abc123`.
 
 ## Database Schema
 
@@ -120,6 +192,8 @@ end
 - `password_reset_tokens` - Secure password reset tokens
 - `domains` - Custom domain mappings
 - `api_keys` - API key authentication with scopes
+- `oauth_clients` - OAuth2 client applications
+- `oauth_tokens` - Issued OAuth2 access/refresh tokens
 - `audit_logs` - Activity audit trail
 
 ## Health Check
@@ -206,6 +280,8 @@ APP_BASE_URL=http://localhost:3000
 Required:
 
 - `PG_DATABASE_URL` - PostgreSQL connection string
+- `JWT_SECRET` - JWT signing key (RSA private key for RS256, or secret string for HS256)
+- `JWT_ISSUER` - JWT issuer identifier (e.g., "PlaceOS")
 
 Optional:
 
@@ -213,9 +289,9 @@ Optional:
 - `SG_SERVER_HOST` - Server host (default: 127.0.0.1)
 - `SG_SERVER_PORT` - Server port (default: 3000)
 - `COOKIE_SESSION_SECRET` - Session encryption key
-- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
-- `MICROSOFT_CLIENT_ID` / `MICROSOFT_CLIENT_SECRET`
-- `MICROSOFT_TENANT_ID` - For single-tenant Microsoft apps
+- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` - Google OAuth credentials
+- `MICROSOFT_CLIENT_ID` / `MICROSOFT_CLIENT_SECRET` - Microsoft OAuth credentials
+- `MICROSOFT_TENANT_ID` - Microsoft tenant ID (default: `common` for multi-tenant)
 
 Email (for password reset and invites):
 

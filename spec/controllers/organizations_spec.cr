@@ -164,6 +164,27 @@ describe App::Organizations do
       result.status_code.should eq 401
     end
   end
+  describe "GET /organizations/lookup" do
+    it "returns organization details for valid subdomain" do
+      org = App::Models::Organization.new(
+        name: "Test Org",
+        subdomain: "test-lookup"
+      )
+      org.save!
+
+      response = client.get("/organizations/lookup?subdomain=test-lookup")
+      response.status_code.should eq(200)
+      result = JSON.parse(response.body)
+      result["id"].as_s.should eq(org.id.to_s)
+      result["name"].as_s.should eq("Test Org")
+      result["subdomain"].as_s.should eq("test-lookup")
+    end
+
+    it "returns 404 for invalid subdomain" do
+      response = client.get("/organizations/lookup?subdomain=non-existent")
+      response.status_code.should eq(404)
+    end
+  end
 end
 
 # Helper methods

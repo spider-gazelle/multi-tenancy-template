@@ -9,11 +9,15 @@ require "./services/*"
 require "./controllers/application"
 require "./controllers/*"
 require "./models/*"
+require "./authly/*"
 
 # Server required after application controllers
 require "action-controller/server"
 
 module App
+  # Configure Authly
+  App.configure_authly
+
   # Configure logging (backend defined in constants.cr)
   if running_in_production?
     log_level = ::Log::Severity::Info
@@ -40,6 +44,10 @@ module App
     ActionController::ErrorHandler.new(running_in_production?, keeps_headers),
     ActionController::LogHandler.new(filter_params),
     HTTP::CompressHandler.new
+  )
+
+  ActionController::Server.after(
+    AuthlyHandler.new
   )
 
   # Optional support for serving of static assests
