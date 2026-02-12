@@ -3756,6 +3756,85 @@ paths:
             text/html:
               schema:
                 type: string
+  /organizations/lookup:
+    get:
+      summary: Resolve subdomain to Organization ID (Public)
+      tags:
+      - Organizations
+      operationId: App::Organizations_lookup
+      parameters:
+      - name: subdomain
+        in: query
+        description: Subdomain to lookup
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Organizations__LookupResponse'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
   /organizations/{id}/members:
     get:
       summary: List organization members
@@ -5296,6 +5375,476 @@ paths:
             text/html:
               schema:
                 type: string
+  /organizations/{id}/billing:
+    get:
+      summary: Show billing page
+      tags:
+      - Organizations
+      operationId: App::Organizations_billing_html
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/subscription:
+    get:
+      summary: Get current subscription details
+      tags:
+      - Organizations
+      operationId: App::Organizations_show_subscription
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Organizations__SubscriptionResponse'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Create or Update subscription
+      tags:
+      - Organizations
+      operationId: App::Organizations_update_subscription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App__Organizations__SubscribeParams'
+        required: true
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Organizations__SubscriptionResponse'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/subscription/cancel:
+    post:
+      summary: Cancel subscription
+      tags:
+      - Organizations
+      operationId: App::Organizations_cancel_subscription
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Organizations__SubscriptionResponse'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/invoices:
+    get:
+      summary: List invoices
+      tags:
+      - Organizations
+      operationId: App::Organizations_invoices
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/App__Models__Invoice'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+  /organizations/{id}/plans:
+    get:
+      summary: List available plans
+      tags:
+      - Organizations
+      operationId: App::Organizations_list_plans
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/App__Models__Plan'
+            text/html:
+              schema:
+                type: string
+        406:
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionController__Error__ContentResponse'
+            text/html:
+              schema:
+                type: string
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__ValidationError'
+            text/html:
+              schema:
+                type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App__Base__CommonError'
+            text/html:
+              schema:
+                type: string
   /profile:
     get:
       summary: Show profile page
@@ -6435,6 +6984,20 @@ components:
       required:
       - message
       - organization
+    App__Organizations__LookupResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        subdomain:
+          type: string
+          nullable: true
+      required:
+      - id
+      - name
     App__Organizations__MemberResponse:
       type: object
       properties:
@@ -6687,6 +7250,123 @@ components:
         group_id:
           type: string
           format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+    App__Organizations__SubscriptionResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        plan_name:
+          type: string
+          nullable: true
+        plan_price:
+          type: integer
+          format: Int64
+          nullable: true
+        plan_interval:
+          type: string
+          nullable: true
+        next_invoice_at:
+          type: string
+          format: date-time
+          nullable: true
+        current_period_end:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - status
+    App__Organizations__SubscribeParams:
+      type: object
+      properties:
+        plan_id:
+          type: string
+      required:
+      - plan_id
+    App__Models__Invoice:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        org_id:
+          type: string
+          format: uuid
+          nullable: true
+        subscription_id:
+          type: string
+          format: uuid
+          nullable: true
+        period_start:
+          type: string
+          format: date-time
+          nullable: true
+        period_end:
+          type: string
+          format: date-time
+          nullable: true
+        issue_date:
+          type: string
+          format: date-time
+          nullable: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+        amount_total:
+          type: integer
+          format: Int64
+          nullable: true
+        status:
+          type: string
+          enum:
+          - open
+          - paid
+          - void
+          - uncollectible
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+    App__Models__Plan:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        billing_interval:
+          type: string
+          nullable: true
+        price:
+          type: integer
+          format: Int64
+          nullable: true
+        currency:
+          type: string
+          nullable: true
+        service_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
           nullable: true
         created_at:
           type: string

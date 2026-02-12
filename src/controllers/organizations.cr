@@ -363,6 +363,61 @@ class App::Organizations < App::Base
     invite
   end
 
+  # Subscription Routes
+  ###############################################################################################
+
+  # Show billing page
+  @[AC::Route::GET("/:id/billing")]
+  def billing_html
+    render html: File.read("views/billing.html")
+  end
+
+  # Get current subscription details
+  @[AC::Route::GET("/:id/subscription")]
+  def show_subscription : Models::Subscription?
+    current_org.subscription
+  end
+
+  # Create or Update subscription
+  @[AC::Route::POST("/:id/subscription", body: :sub)]
+  def update_subscription(sub : Models::Subscription) : Models::Subscription
+    require_permission!(current_org, Permissions::Admin)
+
+    existing = current_org.subscription
+
+    if existing
+      Services::BillingService.change_plan(current_org.id, sub.plan_id)
+    else
+      Services::BillingService.create_subscription(current_org.id, sub.plan_id)
+    end
+  end
+
+  # Cancel subscription
+  @[AC::Route::POST("/:id/subscription/cancel")]
+  def cancel_subscription : Models::Subscription
+    require_permission!(current_org, Permissions::Admin)
+
+    sub = current_org.subscription
+    raise Error::NotFound.new("No active subscription") unless sub
+
+    Services::BillingService.cancel_subscription(sub.id)
+
+    sub.reload!
+    sub
+  end
+
+  # List invoices
+  @[AC::Route::GET("/:id/invoices")]
+  def invoices : Array(Models::Invoice)
+    Models::Invoice.where(org_id: current_org.id).order(issue_date: :desc).to_a
+  end
+
+  # List available plans
+  @[AC::Route::GET("/:id/plans")]
+  def list_plans : Array(Models::Plan)
+    Models::Plan.all.order(price: :asc).to_a
+  end
+
   # Response classes
   ###############################################################################################
 

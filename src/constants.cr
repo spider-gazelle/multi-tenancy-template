@@ -41,6 +41,15 @@ module App
   MICROSOFT_CLIENT_SECRET = ENV["MICROSOFT_CLIENT_SECRET"]? || ""
   MICROSOFT_TENANT_ID     = ENV["MICROSOFT_TENANT_ID"]? || "common"
 
+  # Job Scheduling
+  # Set to "true" to disable in-process Tasker cron jobs (use when running jobs externally via K8s CronJobs)
+  DISABLE_TASKER = ENV["DISABLE_TASKER"]? == "true"
+
+  # Cron schedules for in-process jobs (standard cron syntax)
+  CRON_INVOICE_GENERATOR     = ENV["CRON_INVOICE_GENERATOR"]? || "0 0 * * *"     # Daily at midnight
+  CRON_OVERDUE_ENFORCER      = ENV["CRON_OVERDUE_ENFORCER"]? || "0 1 * * *"      # Daily at 1am
+  CRON_ENTITLEMENT_REBUILDER = ENV["CRON_ENTITLEMENT_REBUILDER"]? || "0 2 * * *" # Daily at 2am
+
   def self.running_in_production?
     IS_PRODUCTION
   end

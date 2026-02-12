@@ -50,6 +50,13 @@ end
 
 # Clean up before each test
 Spec.before_each do
+  App::Models::EntitlementSnapshot.clear
+  App::Models::Payment.clear
+  App::Models::Invoice.clear
+  App::Models::Subscription.clear
+  App::Models::Plan.clear
+  App::Models::Service.clear
+
   App::Models::OAuthToken.clear
   App::Models::OAuthClient.clear
   App::Models::AuditLog.clear
