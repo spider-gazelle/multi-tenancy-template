@@ -12,7 +12,7 @@ CREATE TYPE billing_interval AS ENUM ('monthly', 'yearly');
 
 -- Services (Features/Capabilities)
 CREATE TABLE services (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuidv7(),
   name VARCHAR(255) NOT NULL,
   description TEXT,
   entitlement_keys TEXT[] NOT NULL DEFAULT '{}', -- Array of feature flag strings
@@ -22,7 +22,7 @@ CREATE TABLE services (
 
 -- Plans (Bundles of Services)
 CREATE TABLE plans (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuidv7(),
   name VARCHAR(255) NOT NULL,
   billing_interval billing_interval NOT NULL,
   price BIGINT NOT NULL, -- in cents
@@ -34,7 +34,7 @@ CREATE TABLE plans (
 
 -- Subscriptions (Org <-> Plan link)
 CREATE TABLE subscriptions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuidv7(),
   org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   plan_id UUID NOT NULL REFERENCES plans(id),
   state subscription_state NOT NULL DEFAULT 'Active',
@@ -53,7 +53,7 @@ CREATE TABLE subscriptions (
 
 -- Invoices
 CREATE TABLE invoices (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuidv7(),
   org_id UUID NOT NULL REFERENCES organizations(id),
   subscription_id UUID NOT NULL REFERENCES subscriptions(id),
   
@@ -71,7 +71,7 @@ CREATE TABLE invoices (
 
 -- Payments
 CREATE TABLE payments (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuidv7(),
   invoice_id UUID NOT NULL REFERENCES invoices(id),
   amount BIGINT NOT NULL,
   paid_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
@@ -84,7 +84,7 @@ CREATE TABLE payments (
 
 -- Entitlement Snapshots (Runtime Cache)
 CREATE TABLE entitlement_snapshots (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuidv7(),
   org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   enabled_service_keys TEXT[] NOT NULL DEFAULT '{}',
   computed_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
