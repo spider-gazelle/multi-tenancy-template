@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Billing - Spider-Gazelle</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      body {
+        display: block;
+        align-items: initial;
+        justify-content: initial;
+        background: #f5f5f5;
+        padding: 0;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+      }
+      .section {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .section h2 {
+        margin-top: 0;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 0.5rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background: #f8f9fa;
+        font-weight: bold;
+      }
+      .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 0.875rem;
+      }
+      .btn-primary {
+        background: #007bff;
+        color: white;
+      }
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+      .back-link {
+        margin-bottom: 1rem;
+        display: inline-block;
+        color: #007bff;
+        text-decoration: none;
+      }
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+      }
+      .nav-links {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .nav-link {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        color: #333;
+        border: 1px solid #ddd;
+      }
+      .nav-link:hover {
+        background: #f8f9fa;
+      }
+      .nav-link-active {
+        background: #17a2b8;
+        color: white;
+        border-color: #17a2b8;
+      }
+      .nav-link-active:hover {
+        background: #138496;
+      }
+      .plan-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .plan-active {
+        border-color: #28a745;
+        background: #f0fff4;
+      }
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: bold;
+      }
+      .badge-paid {
+        background: #28a745;
+        color: white;
+      }
+      .badge-open {
+        background: #ffc107;
+        color: black;
+      }
+      .badge-void {
+        background: #6c757d;
+        color: white;
+      }
+      .badge-uncollectible {
+        background: #dc3545;
+        color: white;
+      }
+      .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .toast {
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        color: white;
+        font-size: 0.875rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        animation: slideIn 0.3s ease;
+        max-width: 300px;
+      }
+      .toast-success {
+        background: #28a745;
+      }
+      .toast-error {
+        background: #dc3545;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="toast-container" class="toast-container"></div>
+    <div class="container">
+      <a href="/organizations" class="back-link">← Back to Organizations</a>
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 id="org-name">Loading...</h1>
+          <p id="org-description"></p>
+        </div>
+        <div class="nav-links">
+          <a href="#" id="groups-link" class="nav-link">👥 Groups</a>
+          <a href="#" id="settings-link" class="nav-link">⚙️ Settings</a>
+          <a href="#" id="billing-link" class="nav-link nav-link-active"
+            >💳 Billing</a
+          >
+        </div>
+      </div>
+      <div class="section">
+        <h2>Current Subscription</h2>
+        <div id="current-subscription"><p>Loading...</p></div>
+      </div>
+      <div class="section">
+        <h2>Available Plans</h2>
+        <div id="plans-list"><p>Loading...</p></div>
+      </div>
+      <div class="section">
+        <h2>Invoices</h2>
+        <table id="invoices-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Period</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Due Date</th>
+            </tr>
+          </thead>
+          <tbody id="invoices-list">
+            <tr>
+              <td colspan="5">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
+
+    <script>
+      function showToast(message, type = "info") {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.style.animation = "slideOut 0.3s ease forwards";
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+
+      const orgId = window.location.pathname.split("/")[2];
+      let currentPlanId = null;
+      let plansMap = {};
+
+      async function loadOrganization() {
+        const response = await fetch(`/organizations/${orgId}`);
+        const org = await response.json();
+        document.getElementById("org-name").textContent = org.name;
+        document.getElementById("org-description").textContent = org.description || "";
+        document.getElementById("groups-link").href = `/organizations/${orgId}/groups`;
+        document.getElementById("settings-link").href = `/organizations/${orgId}/settings`;
+        document.getElementById("billing-link").href = `/organizations/${orgId}/billing`;
+      }
+
+      async function loadSubscription() {
+        const response = await fetch(`/organizations/${orgId}/subscription`);
+        const container = document.getElementById("current-subscription");
+        const text = await response.text();
+
+        if (!response.ok || !text || text === "null") {
+          container.innerHTML = "<p>No active subscription. Please select a plan below.</p>";
+          currentPlanId = null;
+          return;
+        }
+
+        const sub = JSON.parse(text);
+        currentPlanId = sub.plan_id;
+        const plan = plansMap[sub.plan_id];
+        const planName = plan ? plan.name : "Unknown Plan";
+        const price = plan ? (plan.price / 100).toFixed(2) : "N/A";
+        const interval = plan ? plan.billing_interval : "";
+        const state = (sub.state || "").toLowerCase();
+        const nextInvoice = sub.next_invoice_at ? new Date(sub.next_invoice_at).toLocaleDateString() : "N/A";
+
+        container.innerHTML = `
+          <div class="plan-card plan-active">
+            <div>
+              <h3>${planName}</h3>
+              <p><strong>Status:</strong> ${state.toUpperCase()}</p>
+              <p><strong>Price:</strong> ${price} / ${interval}</p>
+              <p><strong>Next Invoice:</strong> ${nextInvoice}</p>
+            </div>
+            ${state !== "cancelled" ? `<button class="btn btn-danger" onclick="cancelSubscription(this)">Cancel Subscription</button>` : ""}
+          </div>`;
+      }
+
+      async function loadPlans() {
+        const response = await fetch(`/organizations/${orgId}/plans`);
+        const plans = await response.json();
+        plansMap = {};
+        plans.forEach((p) => { plansMap[p.id] = p; });
+
+        const container = document.getElementById("plans-list");
+        container.innerHTML = "";
+        if (plans.length === 0) { container.innerHTML = "<p>No plans available.</p>"; return; }
+
+        plans.forEach((plan) => {
+          const isCurrent = plan.id === currentPlanId;
+          const price = (plan.price / 100).toFixed(2);
+          const card = document.createElement("div");
+          card.className = `plan-card ${isCurrent ? "plan-active" : ""}`;
+          card.innerHTML = `
+            <div><h3>${plan.name}</h3><p>${price} / ${plan.billing_interval}</p></div>
+            <div>${isCurrent ? "<strong>Current Plan</strong>" : `<button class="btn btn-primary" onclick="subscribe('${plan.id}', this)">${currentPlanId ? "Switch Plan" : "Subscribe"}</button>`}</div>`;
+          container.appendChild(card);
+        });
+      }
+
+      async function loadInvoices() {
+        const response = await fetch(`/organizations/${orgId}/invoices`);
+        const invoices = await response.json();
+        const tbody = document.getElementById("invoices-list");
+        tbody.innerHTML = "";
+        if (invoices.length === 0) { tbody.innerHTML = '<tr><td colspan="5">No invoices found</td></tr>'; return; }
+
+        invoices.forEach((inv) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${new Date(inv.issue_date).toLocaleDateString()}</td>
+            <td>${new Date(inv.period_start).toLocaleDateString()} - ${new Date(inv.period_end).toLocaleDateString()}</td>
+            <td>${(inv.amount_total / 100).toFixed(2)}</td>
+            <td><span class="badge badge-${inv.status.toLowerCase()}">${inv.status}</span></td>
+            <td>${new Date(inv.due_date).toLocaleDateString()}</td>`;
+          tbody.appendChild(row);
+        });
+      }
+
+      function confirmAction(btn, message, onConfirm) {
+        if (btn.dataset.confirming) return;
+        btn.dataset.confirming = "true";
+        const original = btn.innerHTML;
+        btn.textContent = message;
+        btn.style.outline = "2px solid currentColor";
+        const cancel = () => { btn.innerHTML = original; btn.style.outline = ""; delete btn.dataset.confirming; };
+        const timer = setTimeout(cancel, 3000);
+        btn.addEventListener("click", function handler() {
+          clearTimeout(timer); btn.removeEventListener("click", handler); cancel(); onConfirm();
+        }, { once: true });
+      }
+
+      async function subscribe(planId, btn) {
+        confirmAction(btn, "Click again to confirm", async () => {
+          const response = await fetch(`/organizations/${orgId}/subscription`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ plan_id: planId }),
+          });
+          if (response.ok) {
+            showToast("Subscription updated!", "success");
+            await loadSubscription();
+            loadPlans();
+          } else {
+            showToast("Failed to update subscription", "error");
+          }
+        });
+      }
+
+      async function cancelSubscription(btn) {
+        confirmAction(btn, "Click again to cancel", async () => {
+          const response = await fetch(`/organizations/${orgId}/subscription/cancel`, { method: "POST" });
+          if (response.ok) {
+            showToast("Subscription cancelled", "success");
+            await loadSubscription();
+            loadPlans();
+          } else {
+            showToast("Failed to cancel subscription", "error");
+          }
+        });
+      }
+
+      // Initialize — load plans first so plansMap is ready for subscription display
+      loadOrganization();
+      loadPlans().then(() => loadSubscription());
+      loadInvoices();
+    </script>
+  </body>
+</html>

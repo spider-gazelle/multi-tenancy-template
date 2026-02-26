@@ -13,6 +13,8 @@ module App
 
   Micrate::DB.connection_url = PG_DATABASE_URL
 
+  run_job = nil
+
   # Command line options
   OptionParser.parse(ARGV.dup) do |parser|
     parser.banner = "Usage: #{PROGRAM_NAME} [arguments]"
@@ -45,6 +47,10 @@ module App
       puts "Done!\n"
       Micrate::Cli.run_status
       exit 0
+    end
+
+    parser.on("--run-job=JOB", "Run a job and exit (invoice_generator, overdue_enforcer, entitlement_rebuilder)") do |job|
+      run_job = job
     end
 
     parser.on("-c URL", "--curl=URL", "Perform a basic health check by requesting the URL") do |url|
@@ -95,6 +101,29 @@ Micrate::Cli.run_up
 require "./config"
 
 module App
+  # Run a single job and exit (for K8s CronJob usage)
+  if job = run_job
+    case job
+    when "invoice_generator"
+      puts "Running InvoiceGenerator..."
+      Jobs::InvoiceGenerator.run
+      puts "Done."
+    when "overdue_enforcer"
+      puts "Running OverdueEnforcer..."
+      Jobs::OverdueEnforcer.run
+      puts "Done."
+    when "entitlement_rebuilder"
+      puts "Running EntitlementRebuilder..."
+      Jobs::EntitlementRebuilder.run
+      puts "Done."
+    else
+      STDERR.puts "Unknown job: #{job}"
+      STDERR.puts "Available jobs: invoice_generator, overdue_enforcer, entitlement_rebuilder"
+      exit 1
+    end
+    exit 0
+  end
+
   server = ActionController::Server.new(port, host)
 
   # (process_count < 1) == `System.cpu_count` but this is not always accurate

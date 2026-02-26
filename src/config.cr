@@ -1,5 +1,6 @@
 # Application dependencies
 require "action-controller"
+require "tasker"
 require "./constants"
 
 # Application code
@@ -10,6 +11,7 @@ require "./controllers/application"
 require "./controllers/*"
 require "./models/*"
 require "./authly/*"
+require "./jobs/*"
 
 # Server required after application controllers
 require "action-controller/server"
@@ -38,6 +40,26 @@ module App
 
   # Configure email service
   Services::EmailService.configure
+
+  # Configure Tasker Schedule (In-App Jobs)
+  # Set DISABLE_TASKER=true when using external scheduling (e.g. K8s CronJobs)
+  # ------------------------------------------------
+  unless DISABLE_TASKER
+    Tasker.cron(CRON_INVOICE_GENERATOR) do
+      Log.info { "Starting Daily Invoice Generation Job" }
+      App::Jobs::InvoiceGenerator.run
+    end
+
+    Tasker.cron(CRON_OVERDUE_ENFORCER) do
+      Log.info { "Starting Daily Overdue Enforcement Job" }
+      App::Jobs::OverdueEnforcer.run
+    end
+
+    Tasker.cron(CRON_ENTITLEMENT_REBUILDER) do
+      Log.info { "Starting Daily Entitlement Reconciliation Job" }
+      App::Jobs::EntitlementRebuilder.run
+    end
+  end
 
   # Add handlers that should run before your application
   ActionController::Server.before(

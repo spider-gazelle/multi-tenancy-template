@@ -31,6 +31,11 @@ dependencies:
   authly:
     github: place-labs/authly
 
+  # Task Scheduling
+  tasker:
+    github: spider-gazelle/tasker
+    version: ~> 2.0
+
 development_dependencies:
   ameba:
     github: veelenga/ameba

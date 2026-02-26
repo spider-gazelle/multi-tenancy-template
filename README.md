@@ -16,6 +16,10 @@ Production-ready Spider-Gazelle template with PostgreSQL, multi-tenant organizat
 - Password reset via email
 - Domain mapping
 - API key authentication
+- Subscriptions, invoicing, and entitlements
+- Payment provider interface (manual + extensible for Stripe, etc.)
+- Scheduled billing jobs (invoice generation, overdue enforcement, entitlement rebuild)
+- CLI job runner for K8s CronJob support
 - Docker support
 
 ## Quick Start
@@ -37,6 +41,7 @@ The template includes ready-to-use web pages:
 - `/organizations` - Organizations list and creation
 - `/organizations/:id/manage` - Organization member management
 - `/organizations/:id/groups` - Groups management
+- `/organizations/:id/billing` - Subscription and billing management
 - `/organizations/lookup?subdomain={name}` - Resolve subdomain to Organization ID (Public API)
 
 ## Authentication
@@ -179,6 +184,97 @@ JWT tokens can grant permissions via scopes:
 
 **Example JWT scope:** `["read", "write", "org:abc123:manager"]` grants Manager permission in organization `abc123`.
 
+## Subscriptions, Invoicing & Entitlements
+
+Built-in billing system that manages per-organization subscriptions, generates invoices, tracks payments, and controls feature access via entitlements.
+
+### Concepts
+
+- **Services** define features/capabilities (e.g. "SSO", "Advanced Analytics") with entitlement keys
+- **Plans** bundle services with a price and billing interval (monthly/yearly)
+- **Subscriptions** link an organization to a plan with state tracking (Active, Suspended, Cancelled)
+- **Invoices** are generated each billing period; payments are recorded against them
+- **Entitlement Snapshots** cache which features an org can access for fast runtime checks
+
+### Subscription States
+
+| State     | Entitlements                                                  | Description                                 |
+| --------- | ------------------------------------------------------------- | ------------------------------------------- |
+| Active    | Full plan services                                            | Normal operation                            |
+| Suspended | Minimal set (billing_portal, read_only_export, admin_billing) | Overdue past grace period                   |
+| Cancelled | None                                                          | Subscription ended, record kept for history |
+
+### Billing Service API
+
+```crystal
+# Create subscription
+BillingService.create_subscription(org_id, plan_id)
+
+# Change plan (active/suspended subscriptions only)
+BillingService.change_plan(org_id, new_plan_id)
+
+# Cancel subscription
+BillingService.cancel_subscription(subscription_id)
+
+# Record a payment (idempotent via provider_reference)
+BillingService.record_payment(invoice_id, amount, provider_key, provider_reference)
+
+# Charge via configured payment provider
+BillingService.charge_invoice(invoice_id, token)
+
+# Check entitlements
+EntitlementService.enabled?(org_id, "sso")        # => true/false
+EntitlementService.list_enabled(org_id)            # => ["sso", "analytics"]
+```
+
+### Payment Provider Interface
+
+Implement `App::Services::PaymentProvider` to integrate with payment gateways:
+
+```crystal
+abstract class PaymentProvider
+  abstract def provider_key : String
+  abstract def create_customer(org, email) : String
+  abstract def charge(invoice, amount, token) : String
+  abstract def refund(payment) : Bool
+end
+```
+
+A `ManualProvider` is included for manual/offline payments. Configure via:
+
+```crystal
+BillingService.configure(payment_provider: MyStripeProvider.new)
+```
+
+### Scheduled Jobs
+
+Three idempotent jobs handle billing lifecycle:
+
+| Job                  | Purpose                                                 | Default Schedule |
+| -------------------- | ------------------------------------------------------- | ---------------- |
+| InvoiceGenerator     | Creates invoices for subscriptions at `next_invoice_at` | Daily midnight   |
+| OverdueEnforcer      | Suspends subscriptions past grace period                | Daily 1am        |
+| EntitlementRebuilder | Periodic entitlement reconciliation                     | Daily 2am        |
+
+**Run via CLI** (for K8s CronJobs):
+
+```bash
+crystal run src/app.cr -- --run-job=invoice_generator
+crystal run src/app.cr -- --run-job=overdue_enforcer
+crystal run src/app.cr -- --run-job=entitlement_rebuilder
+```
+
+**In-process scheduling** uses Tasker (disable with `DISABLE_TASKER=true`). Cron schedules are configurable via env vars.
+
+### REST Endpoints
+
+- `GET /organizations/:id/billing` - Billing management page
+- `GET /organizations/:id/subscription` - Current subscription details
+- `POST /organizations/:id/subscription` - Create or change subscription
+- `POST /organizations/:id/subscription/cancel` - Cancel subscription
+- `GET /organizations/:id/invoices` - List invoices
+- `GET /organizations/:id/plans` - List available plans
+
 ## Database Schema
 
 - `users` - User accounts with password hash
@@ -195,6 +291,12 @@ JWT tokens can grant permissions via scopes:
 - `oauth_clients` - OAuth2 client applications
 - `oauth_tokens` - Issued OAuth2 access/refresh tokens
 - `audit_logs` - Activity audit trail
+- `services` - Feature/capability definitions with entitlement keys
+- `plans` - Subscription plans (bundles of services with pricing)
+- `subscriptions` - Organization-to-plan link with state (Active/Suspended/Cancelled)
+- `invoices` - Billing invoices per period
+- `payments` - Payment records against invoices
+- `entitlement_snapshots` - Cached feature access per organization
 
 ## Health Check
 
@@ -307,6 +409,13 @@ Email (for password reset and invites):
 Other:
 
 - `PUBLIC_WWW_PATH` - Static files directory (default: `./www`)
+
+Billing / Jobs:
+
+- `DISABLE_TASKER` - Set to `true` to disable in-process cron jobs (use K8s CronJobs instead)
+- `CRON_INVOICE_GENERATOR` - Cron schedule for invoice generation (default: `0 0 * * *`)
+- `CRON_OVERDUE_ENFORCER` - Cron schedule for overdue enforcement (default: `0 1 * * *`)
+- `CRON_ENTITLEMENT_REBUILDER` - Cron schedule for entitlement rebuild (default: `0 2 * * *`)
 
 ## Testing
 

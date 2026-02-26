@@ -17,7 +17,16 @@ class App::Models::Organization < ::PgORM::Base
   has_many :domains, class_name: Domain
   has_many :groups, class_name: Group
 
+  has_many :invoices, class_name: Invoice, foreign_key: "org_id"
+
   include PgORM::Timestamps
+
+  # Get the organization's current subscription (active or suspended).
+  # Cancelled subscriptions are historical records and skipped here.
+  def subscription : Subscription?
+    Subscription.where("org_id = ? AND state IN ('Active', 'Suspended')", self.id)
+      .first?
+  end
 
   before_save do
     self.name = name.strip
